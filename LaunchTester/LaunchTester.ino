@@ -1,9 +1,15 @@
 #include <Servo.h>
-//hi Matt
+
 Servo myServo;
 int servoPin = 9;
 int buttons = A7;
 int servoAngle;
+
+// Servo Realoader
+const int reloaderServoPin = 10;
+Servo reloaderServo;  
+int reloaderServoAngle1 = 30; //X
+int reloaderServoAngle2 = 0; //Y
 
 
 int solPowPin = 6;
@@ -23,7 +29,11 @@ void setup() {
   pinMode(solPowPin,OUTPUT);
   digitalWrite(solDirPin, HIGH);
 
-  
+  //Servo Reloader
+  reloaderServo.attach(reloaderServoPin);  
+  Serial.begin(9600);     
+  reloaderServo.write(0);  
+  reloaderServo.write(reloaderServoAngle1); 
 }
 
 void loop() {
@@ -46,7 +56,8 @@ void launchSequence() {
   analogWrite(solPowPin, solenoidPower);
   delay(onTime);
   analogWrite(solPowPin,0);
-  delay(launchDelay); 
+  delay(launchDelay);
+  reload();
 }
 
 
@@ -95,7 +106,17 @@ int launchButton[2] = {725, 775};
     launchSequence();
   }
 }
-
+ 
+ //Reloading Method
+  void reload(){
+  reloaderServo.write(reloaderServoAngle2);
+  Serial.println("Drop ball");
+  delay(1000);
+  reloaderServo.write(reloaderServoAngle1);
+  Serial.println("Reload");
+  delay(1000);
+  }
+ 
 
 
 
