@@ -1,6 +1,6 @@
 #include <Servo.h>
 
-Servo myServo;
+Servo angleServo;
 int servoPin = 9;
 int buttons = A7;
 int servoAngle;
@@ -8,20 +8,23 @@ int servoAngle;
 // Servo Realoader
 const int reloaderServoPin = 10;
 Servo reloaderServo;  
-int reloaderServoAngle1 = 30; //X
-int reloaderServoAngle2 = 0; //Y
 
 
 int solPowPin = 6;
 int solDirPin = 7;
-int onTime = 400;
-int launchDelay = 1500;
 int solenoidPower = 255;
+
+
+
+int reloaderServoAngle1 = 30; //X
+int reloaderServoAngle2 = 0; //Y
+
+
 void setup() {
   Serial.begin(9600);
 
   //Servo motor control
-  myServo.attach(servoPin);
+  angleServo.attach(servoPin);
   servoAngle = 0;
 
   //Solenoid
@@ -43,8 +46,8 @@ void loop() {
   handleButtonClick(buttonPressed);
 
 
-  if (myServo.read() != servoAngle) {
-    myServo.write(servoAngle);
+  if (angleServo.read() != servoAngle) {
+    angleServo.write(servoAngle);
   }
 
  printDisplay();
@@ -52,6 +55,8 @@ void loop() {
 
 
 void launchSequence() {
+  int launchDelay = 500;
+  int onTime = 400;
   Serial.println("Launch");
   analogWrite(solPowPin, solenoidPower);
   delay(onTime);
@@ -86,7 +91,6 @@ void increaseAngle() {
 
 void handleButtonClick(int buttonPressed) {
  
-
   //Button frequency ranges
 
 int up[2]= {0,100};
@@ -103,19 +107,35 @@ int launchButton[2] = {725, 775};
     
   }
   else if (buttonPressed >= launchButton[0] && buttonPressed <= launchButton[1])  {
+    
+    launchSequence();
+    delay(1000);
+    launchSequence();
+    delay(1000);
+    launchSequence();
+    delay(1000);
+    launchSequence();
+    delay(1000);
+    launchSequence();
+    delay(1000);
     launchSequence();
   }
 }
  
  //Reloading Method
   void reload(){
+ 
+  int firingAngle = angleServo.read();
+  angleServo.write(84);
+  delay(800);
   reloaderServo.write(reloaderServoAngle2);
   Serial.println("Drop ball");
   delay(1000);
+  angleServo.write(firingAngle);
   reloaderServo.write(reloaderServoAngle1);
   Serial.println("Reload");
-  delay(1000);
-  }
+  
+ }
  
 
 
