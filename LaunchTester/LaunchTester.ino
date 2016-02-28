@@ -1,5 +1,6 @@
 #include <Servo.h>
 
+// Servo to change angle
 Servo angleServo;
 int servoPin = 9;
 int buttons = A7;
@@ -10,19 +11,18 @@ const int reloaderServoPin = 10;
 Servo reloaderServo;  
 
 
-int solPowPin = 6;
-int solDirPin = 7;
+int solPowPin = 6; //Solenoid power pin
+int solDirPin = 7; //Solenoid direction pin
 int solenoidPower = 255;
 
-
-
-int reloaderServoAngle1 = 30; //X
-int reloaderServoAngle2 = 0; //Y
+int angleToLoadNextBall = 30; //X
+int angleToDropBall = 0; //Y
 
 
 void setup() {
+  //Serial
   Serial.begin(9600);
-
+  
   //Servo motor control
   angleServo.attach(servoPin);
   servoAngle = 0;
@@ -36,7 +36,7 @@ void setup() {
   reloaderServo.attach(reloaderServoPin);  
   Serial.begin(9600);     
   reloaderServo.write(0);  
-  reloaderServo.write(reloaderServoAngle1); 
+  reloaderServo.write(angleToLoadNextBall); 
 }
 
 void loop() {
@@ -90,21 +90,19 @@ void increaseAngle() {
 }
 
 void handleButtonClick(int buttonPressed) {
- 
-  //Button frequency ranges
-
+ //Button frequency ranges for Romeo board
 int up[2]= {0,100};
 int down[2] = {300,350};
 int launchButton[2] = {725, 775};
 //int ranges[3][2] = {down,up,launch};
-  
-    if (buttonPressed >= down[0] && buttonPressed <= down[1]) {
+
+  //Down button pressed
+  if (buttonPressed >= down[0] && buttonPressed <= down[1]) {
     decreaseAngle();
-    
   }
+  //Up button pressed
   else if (buttonPressed >= up[0] && buttonPressed <= up[1]) {
     increaseAngle();
-    
   }
   else if (buttonPressed >= launchButton[0] && buttonPressed <= launchButton[1])  {
     
@@ -128,11 +126,11 @@ int launchButton[2] = {725, 775};
   int firingAngle = angleServo.read();
   angleServo.write(84);
   delay(800);
-  reloaderServo.write(reloaderServoAngle2);
+  reloaderServo.write(angleToDropBall);
   Serial.println("Drop ball");
   delay(1000);
   angleServo.write(firingAngle);
-  reloaderServo.write(reloaderServoAngle1);
+  reloaderServo.write(angleToLoadNextBall);
   Serial.println("Reload");
   
  }
