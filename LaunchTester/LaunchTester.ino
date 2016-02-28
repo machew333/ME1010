@@ -4,7 +4,7 @@
 Servo angleServo;
 int servoPin = 9;
 int buttons = A7;
-int servoAngle;
+int servoAngle = 35;
 
 // Servo Realoader
 const int reloaderServoPin = 10;
@@ -25,7 +25,7 @@ void setup() {
 
   //Servo motor control
   angleServo.attach(servoPin);
-  servoAngle = 0;
+  angleServo.write(servoAngle);
 
   //Solenoid
   pinMode(solDirPin, OUTPUT);
@@ -35,7 +35,6 @@ void setup() {
   //Servo Reloader
   reloaderServo.attach(reloaderServoPin);
   Serial.begin(9600);
-  reloaderServo.write(0);
   reloaderServo.write(angleToLoadNextBall);
 }
 
@@ -57,19 +56,19 @@ void loop() {
 
 
 //---------------------------------\\
-//------- METHODS WE MADE ---------\\
-//---------------------------------\\
+||------- METHODS WE MADE ---------||
+\\---------------------------------//
 
 
 
 //Fire all ammo 
-void unloadAmmo() {
+void fireCannon() {
   int shotTime = 400;
   int launchDelay = 500;
   
   int numBalls = 6;
 
-  for (int i =0; i < numBalls -1 ; i++) {
+  for (int i =0; i < numBalls ; i++) {
     String shotText = String("Shot") + i + String(" out");
     
     int launchDelay = 500;
@@ -78,7 +77,6 @@ void unloadAmmo() {
     analogWrite(solPowPin, solenoidPower);
     delay(onTime);
     analogWrite(solPowPin, 0);
-    delay(launchDelay);
     reload();
   }  
 }
@@ -90,12 +88,12 @@ void reload() {
 
   int firingAngle = angleServo.read();
   angleServo.write(84);
-  delay(800);
+  delay(600);
   reloaderServo.write(angleToDropBall);
   Serial.println("Drop ball");
-  delay(800);
+  delay(600);
   angleServo.write(firingAngle);
-  delay(800);
+  delay(600);
   reloaderServo.write(angleToLoadNextBall);
   Serial.println("Reload");
 }
@@ -144,7 +142,7 @@ void handleButtonClick(int buttonPressed) {
   }
   //launch
   else if (buttonPressed >= launchButton[0] && buttonPressed <= launchButton[1])  {
-    unloadAmmo();
+    fireCannon();
   }
 
 }
