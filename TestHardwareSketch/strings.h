@@ -7,7 +7,7 @@ const char SolenoidDes[] PROGMEM = "TestSolenoid: \nUse up and down to increment
 const char LauncherServoDes[] PROGMEM = "TestLauncherServo:\nUP/DOWN = +/- 5. Right/Left = +/- 1. SELECT = move servo\n";
 const char AimFireDes[] PROGMEM = "TestAimFire:UP/DOWN = +/- 5. Right/Left = +/- 1. SELECT = move servo and fire\n";
 const char MoveLauncherDes[] PROGMEM = "TestMoveLauncher:\n Use LEFT, RIGHT to choose position. SELECT to move.\n";
-
+const char Killed[] PROGMEM = "SHUT IT DOWN";
 
 const char Help[][50] PROGMEM = {  "------------------------------------------------\n",
                                   "  Team 21 Test Hardware Sketch                  \n",

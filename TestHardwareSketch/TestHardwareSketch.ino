@@ -16,24 +16,24 @@ Pin Usage:    Pin type/number     Hardware
 /****************************
  ** #defines and #includes **
  ****************************/ 
- #define STRING(x) (strcpy_P(tmp_string, (char *)x))
+#include <Servo.h> 
+#include "strings.h"
+#define STRING(x) (strcpy_P(tmp_string, (char *)x))
 #define PRINT_STRING(y) (Serial.print(STRING(y)))
- #include <Servo.h> 
- #include "strings.h"
 /***********************
  ** Global Variables ***
  ***********************/
-char tmp_string[100];
+char tmp_string[100]; //for storing print string chars
 // *** Declare & Initialize Pins ***
 const int buttons = A7;
 int motorDirPin = 4;
 int motorPowPin = 5;
 int irPin = A5;
-const int pinSwitch1 = 11;
-const int pinSwitch2 = 12;
+const int leftSwitchPin = 11;
+const int rightSwitchPin = 12;
 const int servoPin = 9;
-const int directionPin = 7;
-const int powerPin = 6;
+const int solenoidDirPin = 7;
+const int solenoidPowPin = 6;
 
 // *** Create Servo Objects ***
 Servo myServo;
@@ -70,10 +70,10 @@ pinMode(buttons,INPUT);
 pinMode(motorDirPin,OUTPUT);
 pinMode(motorPowPin,OUTPUT);
 pinMode(irPin,INPUT);  
-pinMode(pinSwitch1, INPUT_PULLUP);
-pinMode(pinSwitch2, INPUT_PULLUP); 
+pinMode(leftSwitchPin, INPUT_PULLUP);
+pinMode(rightSwitchPin, INPUT_PULLUP); 
 myServo.attach(servoPin); 
-pinMode(directionPin,OUTPUT); 
+pinMode(solenoidDirPin,OUTPUT); 
   // *** Initialize Serial Communication ***
 Serial.begin(9600);    
   // *** Take Initial Readings ***
@@ -154,7 +154,13 @@ if(Serial.available()){
       TestMoveLauncher();
     }
     break;
-
+    case 'k':
+    PRINT_STRING(Killed);
+    while (!Serial.available()){
+      KillSwitch();
+    }
+    
+    break;
     case 'h':
     help();
     break;
@@ -239,10 +245,10 @@ void CountStripes(){
 
 void FireSolenoid(){
   int buttonReading = analogRead(buttons);
-  digitalWrite(directionPin,1);
-  analogWrite(powerPin,solenoidPower);
+  digitalWrite(solenoidDirPin,1);
+  analogWrite(solenoidPowPin,solenoidPower);
   delay(solenoidActivationTime);
-  analogWrite(powerPin,0);
+  analogWrite(solenoidPowPin,0);
   Serial.println("Firing!");
 }
 
@@ -253,12 +259,12 @@ void MoveLauncher(int desiredPosition){
     motorLeft = 1;
   }
   TurnMotorOn();
-  int switchValLeft = digitalRead(pinSwitch1); 
-  int switchValRight = digitalRead(pinSwitch2);
+  int switchValLeft = digitalRead(leftSwitchPin); 
+  int switchValRight = digitalRead(rightSwitchPin);
   while (!((desiredPosition == counts) || (motorLeft == 1 && switchValLeft == 1) || (motorLeft == 0 && switchValRight == 1))){
     CountStripes();
-    switchValLeft = digitalRead(pinSwitch1); 
-    switchValRight = digitalRead(pinSwitch2);
+    switchValLeft = digitalRead(leftSwitchPin); 
+    switchValRight = digitalRead(rightSwitchPin);
   }
   BrakeMotor();
 }
@@ -267,11 +273,11 @@ void help(){
   for(int i = 0; i < (sizeof(Help)/50); i++)
     PRINT_STRING(&Help[i][0]);
 }
-
-//void PRINT_STRING(String message) {
-//  Serial.print(message);
-//}
-
+void KillSwitch() {
+//  Shut down all moving or heat sensitive parts
+  analogWrite(motorPowPin,0);
+  analogWrite(solenoidPowPin,0);
+}
 
 
 
