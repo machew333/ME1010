@@ -37,7 +37,7 @@ void TestAimFire() {
 
     case 5:
     //Serial.println("SELECT button pressed");
-    myServo.write(launcherServoAngle);
+    launcherServo.write(launcherServoAngle);
     Serial.print("Servo moved to ");
     Serial.print(launcherServoAngle);
     Serial.println(" degrees");

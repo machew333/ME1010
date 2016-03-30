@@ -36,7 +36,7 @@ const int solenoidDirPin = 7;
 const int solenoidPowPin = 6;
 
 // *** Create Servo Objects ***
-Servo myServo;
+Servo launcherServo;
 // *** Declare & Initialize Program Variables ***
 int buttonReading = 0;
 int motorPower = 255;
@@ -72,16 +72,16 @@ pinMode(motorPowPin,OUTPUT);
 pinMode(irPin,INPUT);  
 pinMode(leftSwitchPin, INPUT_PULLUP);
 pinMode(rightSwitchPin, INPUT_PULLUP); 
-myServo.attach(servoPin); 
+launcherServo.attach(servoPin); 
 pinMode(solenoidDirPin,OUTPUT); 
   // *** Initialize Serial Communication ***
 Serial.begin(9600);    
   // *** Take Initial Readings ***
 lastEncoderBoolean = GetEncoderBoolean();  
 lastTime = millis();
-myServo.write(0);  
+launcherServo.write(0);  
   // *** Move Hardware to Desired Initial Positions ***
-myServo.write(launcherServoAngle);
+launcherServo.write(launcherServoAngle);
 help();
 }// end setup() function
 
@@ -93,10 +93,6 @@ void loop(void){
   char userInput = 0;
 if(Serial.available()){
   userInput = Serial.read();
-  if (userInput >= 0){
-    Serial.println(userInput);
-  }
-}
   switch(userInput) {
     
     case 'b':
@@ -155,20 +151,23 @@ if(Serial.available()){
       TestMoveLauncher();
     }
     break;
+    
     case 'k':
     PRINT_STRING(Killed);
     while (!Serial.available()){
       KillSwitch();
     }
-    
     break;
+    
     case 'h':
     help();
     break;
+
+    default:
+    Serial.print(userInput);
+    Serial.println(" is not a registered command. Type h for help");
   }
-
-
-
+}
 } // end loop() function
 
 /****************************
