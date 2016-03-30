@@ -1,7 +1,7 @@
 /****************************************************************
 Author Name: Kevin Moffatt and Matt Wilson
 Date: 3/10/16
-Sketch Name: ButtonTestSketch3
+Sketch Name: Test Hardware Sketch
 Sketch Description:  
 
 Button Usage: Up/Down    -  
@@ -9,8 +9,8 @@ Button Usage: Up/Down    -
               Select     -  
 
 Pin Usage:    Pin type/number     Hardware 
-              ----------------    ----------------                   
-              
+              ----------------    ----------------  
+
 ******************************************************************/
  
 /****************************
@@ -85,12 +85,13 @@ launcherServo.write(launcherServoAngle);
 help();
 }// end setup() function
 
+
 /*******************
- ** Loop Function **
+ ** Serial Event  **
  *******************/
-void loop(void){
-   //PUT YOUR MAIN CODE HERE, TO RUN REPEATEDLY
-  char userInput = 0;
+ //Only runs when the Serial is doing something
+void serialEvent() {
+   char userInput = 0;
 if(Serial.available()){
   userInput = Serial.read();
   switch(userInput) {
@@ -168,6 +169,15 @@ if(Serial.available()){
     Serial.println(" is not a registered command. Type h for help");
   }
 }
+}//end serialEvent
+
+
+/*******************
+ ** Loop Function **
+ *******************/
+void loop(void){
+   //PUT YOUR MAIN CODE HERE, TO RUN REPEATEDLY
+ 
 } // end loop() function
 
 /****************************
