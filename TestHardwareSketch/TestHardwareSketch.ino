@@ -82,6 +82,7 @@ lastTime = millis();
 myServo.write(0);  
   // *** Move Hardware to Desired Initial Positions ***
 myServo.write(launcherServoAngle);
+help();
 }// end setup() function
 
 /*******************
