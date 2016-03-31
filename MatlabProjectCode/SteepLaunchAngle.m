@@ -1,6 +1,6 @@
 function [ thetaLaunch ] = SteepLaunchAngle( d,v0,xTarget )
 %SteepLaunchAngle computes the launch angle for given target distances 
-[maxDistance,maxDistanceAngle] = MaxDistance(d,v0);
+[maxDistance,maxDistanceAngle] = MaxDistance2(d,v0);
 for i=1:length(xTarget)
     if(xTarget(i)<=maxDistance)
         theta = 90:-.1:maxDistanceAngle;

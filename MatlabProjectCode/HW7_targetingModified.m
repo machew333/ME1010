@@ -83,21 +83,19 @@ fprintf('\nOriginal offsets and original v0\n');
 for i=1:length(thetaServo)
     fprintf('Target Distance = %.2fm --> Launch angle = %.2f deg --> Servo angle = %.2f deg\n',xTarget(i),thetaLaunch(i),thetaServo(i));
 end
-fprintf('\nThird optimal offsets and orignal v0\n');
-thetaServo = ThetaServo(H,thetaLaunch,optimal_offsets_3); % Third optimal offsets [10.14,6.995]
-for i=1:length(thetaServo)
-    fprintf('Target Distance = %.2fm --> Launch angle = %.2f deg --> Servo angle = %.2f deg\n',xTarget(i),thetaLaunch(i),thetaServo(i));
-end
-thetaLaunch2 = SteepLaunchAngle(d,optimal_v0_2,xTarget);
-thetaServo = ThetaServo(H,thetaLaunch2,optimal_offsets); % Original Data
-fprintf('\nOriginal offsets and second v0\n');
-for i=1:length(thetaServo)
-    fprintf('Target Distance = %.2fm --> Launch angle = %.2f deg --> Servo angle = %.2f deg\n',xTarget(i),thetaLaunch(i),thetaServo(i));
-end
-fprintf('\nThird optimal offsets and second v0\n');
-thetaServo = ThetaServo(H,thetaLaunch2,optimal_offsets_3); % Third optimal offsets [10.14,6.995]
-for i=1:length(thetaServo)
-    fprintf('Target Distance = %.2fm --> Launch angle = %.2f deg --> Servo angle = %.2f deg\n',xTarget(i),thetaLaunch(i),thetaServo(i));
-end
-
-fprintf('\nAfter analyzing the data, the two v0 values are close enough they make no big difference in the servomotor angle\n');
+% fprintf('\nThird optimal offsets and orignal v0\n');
+% thetaServo = ThetaServo(H,thetaLaunch,optimal_offsets_3); % Third optimal offsets [10.14,6.995]
+% for i=1:length(thetaServo)
+%     fprintf('Target Distance = %.2fm --> Launch angle = %.2f deg --> Servo angle = %.2f deg\n',xTarget(i),thetaLaunch(i),thetaServo(i));
+% end
+% thetaLaunch2 = SteepLaunchAngle(d,optimal_v0_2,xTarget);
+% thetaServo = ThetaServo(H,thetaLaunch2,optimal_offsets); % Original Data
+% fprintf('\nOriginal offsets and second v0\n');
+% for i=1:length(thetaServo)
+%     fprintf('Target Distance = %.2fm --> Launch angle = %.2f deg --> Servo angle = %.2f deg\n',xTarget(i),thetaLaunch(i),thetaServo(i));
+% end
+% fprintf('\nThird optimal offsets and second v0\n');
+% thetaServo = ThetaServo(H,thetaLaunch2,optimal_offsets_3); % Third optimal offsets [10.14,6.995]
+% for i=1:length(thetaServo)
+%     fprintf('Target Distance = %.2fm --> Launch angle = %.2f deg --> Servo angle = %.2f deg\n',xTarget(i),thetaLaunch(i),thetaServo(i));
+% end

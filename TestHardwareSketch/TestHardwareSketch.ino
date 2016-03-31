@@ -159,6 +159,13 @@ if(Serial.available()){
       KillSwitch();
     }
     break;
+
+//    case 'r':
+//    PRINT_STRING(AimFireDes);
+//    while (!Serial.available()) {
+//      TestAutoLaunch();
+//    }
+//    break;
     
     case 'h':
     help();
@@ -257,9 +264,10 @@ void FireSolenoid(){
   int buttonReading = analogRead(buttons);
   digitalWrite(solenoidDirPin,1);
   analogWrite(solenoidPowPin,solenoidPower);
+  Serial.println("Firing!");
   delay(solenoidActivationTime);
   analogWrite(solenoidPowPin,0);
-  Serial.println("Firing!");
+  Serial.println("Bombs out");
 }
 
 void MoveLauncher(int desiredPosition){
