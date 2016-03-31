@@ -48,6 +48,11 @@ for i = targets
 end
 
 
+while(true)
+    if (Serial.BytesAvailable)
+        
+
+
 %Close the communications
 fclose(Serial); %closes Serial port
 delete(Serial); %removes Serial from memory

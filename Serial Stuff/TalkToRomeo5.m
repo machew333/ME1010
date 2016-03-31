@@ -48,6 +48,22 @@ for i = targets
 end
 
 
+while(true)
+    if (Serial.BytesAvailable)
+        arduinoMessage = fscanf(Serial);
+        arduinoMessage = arduinoMessage(1:end-2);
+        
+        if (length(arduinoMessage) ==0)
+            break;
+        else
+            fprintf('\n%s\n',arduinoMessage);
+        end
+    end
+end
+    
+        
+
+
 %Close the communications
 fclose(Serial); %closes Serial port
 delete(Serial); %removes Serial from memory
