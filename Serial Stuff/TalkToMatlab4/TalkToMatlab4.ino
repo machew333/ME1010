@@ -13,10 +13,10 @@ void setup() {
       continue; //do nothing
     }
     Serial.readBytes(matlabData,3);
-    endoderPos = matlabData[0];
-    xTarget_HB = matlabData[1];
-    xTarget_LB = matlabData[2];
-    targetNumber = i+1;
+    byte encoderPos = matlabData[0];
+    byte xTarget_HB = matlabData[1];
+    byte xTarget_LB = matlabData[2];
+    int targetNumber = i+1;
     sprintf(reply,"For target %d, I recieved encoderPos = %d, xTarget_HB = %d, and xTarget_LB = %d",targetNumber,encoderPos,xTarget_HB,xTarget_LB);
     Serial.println(reply);      
   }

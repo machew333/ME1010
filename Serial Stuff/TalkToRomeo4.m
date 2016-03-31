@@ -11,7 +11,9 @@ end
 
 %Initialize port
 windowsPort = 'COM23';
-macPort = '/dev/cu.usbmodem1411';
+macPortR = '/dev/cu.usbmodem1411';
+macPortL = '/dev/cu.usbmodem1421';
+macPort = macPortL;
 
 %speed of serial transmission. must match Arduino side
 baudRate = 9600;
