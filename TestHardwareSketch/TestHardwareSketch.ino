@@ -39,6 +39,7 @@ const int reloaderServoPin = 10;
 
 // *** Create Servo Objects ***
 Servo launcherServo;
+Servo reloaderServo;
 // *** Declare & Initialize Program Variables ***
 int buttonReading = 0;
 int motorPower = 255;
@@ -81,7 +82,7 @@ pinMode(rightSwitchPin, INPUT_PULLUP);
 launcherServo.attach(servoPin); 
 pinMode(solenoidDirPin,OUTPUT); 
 pinMode(pinIRLED, OUTPUT);
-realoaderServo.attach(reloaderServoPin);
+reloaderServo.attach(reloaderServoPin);
   // *** Initialize Serial Communication ***
 Serial.begin(9600);    
   // *** Take Initial Readings ***
@@ -296,7 +297,7 @@ void MoveLauncher(int desiredPosition){
     Serial.println("Launcher at home position. Counts reset to 0");
   }
   if (switchValRight == 1){
-    counts = 37; //FIXME ensure that max counts is 37
+    counts = 37; //37 is verified to be max counts
     Serial.println("Launcher is at reloading position. Counts set to 37");
   }
 }

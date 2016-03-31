@@ -25,6 +25,9 @@ const char Help[][50] PROGMEM = {  "--------------------------------------------
                                   "  l - Launcher servo                            \n",
                                   "  a - Aim and fire                              \n",
                                   "  m - Move launcher                             \n",
+                                  "  i - IR LED                                    \n",
+                                  "  r - Reloader                                  \n",
+                                  "  k - KillSwitch                                \n",
                                   "------------------------------------------------\n" };
 
 
