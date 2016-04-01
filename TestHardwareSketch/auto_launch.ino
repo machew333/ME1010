@@ -1,14 +1,15 @@
-void TestAimFire() {  
+void TestAutoLaunch() {  
   int buttonReading = ReadButton();
 
   switch (buttonReading) {
 
     case 1:
-    //Serial.println("UP button pressed");
-    launcherServoAngle += servoLargeIncrement;
+    Serial.println("Enter servo angle:");
+    while(!Serial.available())
+      continue;
+      
+    launcherServoAngle =Serial.read();
     launcherServoAngle = constrain(launcherServoAngle,0,180);
-    Serial.println(launcherServoAngle);
-    delay(250);
     break;
 
     case 2:
@@ -20,13 +21,14 @@ void TestAimFire() {
     break;
 
     case 3:
-    //Serial.println("DOWN button pressed");
-    launcherServoAngle -= servoLargeIncrement;
+    Serial.println("Enter servo angle:");
+    while(!Serial.available())
+      continue;
+      
+    launcherServoAngle =Serial.read();
     launcherServoAngle = constrain(launcherServoAngle,0,180);
-    Serial.println(launcherServoAngle);
-    delay(250);
     break;
-
+    
     case 4:
     //Serial.println("RIGHT button pressed");
     launcherServoAngle += servoSmallIncrement;
@@ -51,4 +53,3 @@ void TestAimFire() {
   }
 delay(250);
 }
-

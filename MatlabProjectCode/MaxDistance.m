@@ -4,7 +4,7 @@ function [ maxDistance, maxDistanceAngle ] = MaxDistance( d,v0 )
 theta=-.01;
 maxXLand = 0;
 while(theta<=90)
-    theta=theta+.01;
+    theta=theta+1;
     xLand = LandingDistance(d,v0,theta);
     if(xLand>maxXLand)
         maxXLand=xLand;

@@ -53,6 +53,7 @@ maxServoRange, bestLvals
 expectedLAerror = currentLAerror*(currentServoRange/maxServoRange)
 xLandError = MissBy(d,v0,xTarget,expectedLAerror)
 ThetaLaunch(bestLvals,0:180,offsets);
+Hbest = ConvertBetweenLandH(bestLvals) / 1000;
 
 
             
