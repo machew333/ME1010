@@ -10,6 +10,7 @@ const char MoveLauncherDes[] PROGMEM = "TestMoveLauncher:\n Use LEFT, RIGHT to c
 const char IRLEDDes[] PROGMEM = "TestIRLED:\nFlashes LED on for one second and off for one second.\n";
 const char ReloaderDes[] PROGMEM = "TestReloader:\nReloads one ping pong ball per run";
 const char Killed[] PROGMEM = "SHUT IT DOWN\n";
+const char AskForAngle[] PROGMEM = "Enter servo angle to move to\n";
 
 const char Help[][50] PROGMEM = {  "------------------------------------------------\n",
                                   "  Team 21 Test Hardware Sketch                  \n",
@@ -27,6 +28,8 @@ const char Help[][50] PROGMEM = {  "--------------------------------------------
                                   "  m - Move launcher                             \n",
                                   "  i - IR LED                                    \n",
                                   "  r - Reloader                                  \n",
+                                  "  f - Fire solenoid                             \n",
+                                  "  mv - Move launcher to servo angle             \n",
                                   "  k - KillSwitch                                \n",
                                   "------------------------------------------------\n" };
 

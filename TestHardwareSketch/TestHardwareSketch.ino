@@ -100,118 +100,24 @@ help();
 /*******************
  ** Serial Event  **
  *******************/
- //Only runs when the Serial is doing something
-void serialEvent() {
-   char userInput = 0;
-if(Serial.available()){
-  userInput = Serial.read();
-  switch(userInput) {
-    
-    case 'b':
-    PRINT_STRING(ButtonDes);
-    delay(1000);
-    while (!Serial.available()){
-      TestButtons();
-    }
-    break;
-
-    case 'e':
-    PRINT_STRING(MotorEncoderDes);
-    while (!Serial.available()){
-      TestMotorEncoder();
-    }
-    break;
-
-    case 'c':
-    PRINT_STRING(CountStripesDes);
-    while (!Serial.available()){
-      TestCountStripes();
-    }
-    break;
-
-    case 's':
-    PRINT_STRING(SwitchesDes);
-    while (!Serial.available()){
-      TestSwitches();
-    }
-    break;
-
-    case 'n':
-    PRINT_STRING(SolenoidDes);
-    while (!Serial.available()){
-      TestSolenoid();
-    }
-    break;
-
-    case 'l':
-    PRINT_STRING(LauncherServoDes);
-    while (!Serial.available()){
-      TestLauncherServo();
-    }
-    break;
-
-    case 'a':
-    PRINT_STRING(AimFireDes);
-    while (!Serial.available()){
-      TestAimFire();
-    }
-    break;
-
-    case 'm':
-    PRINT_STRING(MoveLauncherDes);
-    while (!Serial.available()){
-      TestMoveLauncher();
-    }
-    break;
-
-    case 'i':
-    PRINT_STRING(IRLEDDes);
-    while (!Serial.available()){
-      TestIRLED();
-    }
-    break;
-
-    case 'r':
-    PRINT_STRING(ReloaderDes);
-    while (!Serial.available()){
-      TestReloader();
-    }
-    break;
-    
-    case 'k':
-    PRINT_STRING(Killed);
-    while (!Serial.available()){
-      KillSwitch();
-    }
-    break;
-
-<<<<<<< HEAD
-//    case 'r':
-//    PRINT_STRING(AimFireDes);
-//    while (!Serial.available()) {
-//      TestAutoLaunch();
-//    }
-//    break;
-    
-=======
->>>>>>> master
-    case 'h':
-    help();
-    break;
-
-    default:
-    Serial.print(userInput);
-    Serial.println(" is not a registered command. Type h for help");
-  }
-}
-}//end serialEvent
-
-
+ //Gets called when the Serial is doing something
+// void serialEvent() {
+//  
+// }
 /*******************
  ** Loop Function **
  *******************/
 void loop(void){
    //PUT YOUR MAIN CODE HERE, TO RUN REPEATEDLY
+if(Serial.available() == 1){
+  singleCommand();
+}
+//else if (Serial.available() == 2) {
+//  Serial.println("Doble");
+//}
+//else  {
+//  Serial.flush();
+//}
  
 } // end loop() function
 
@@ -340,5 +246,4 @@ void KillSwitch() {
 
 
 
-// create custom headings as necessary to clearly organize your sketch
-// e.g., Button functions, DC Motor functions, Servo functions, etc.
+
