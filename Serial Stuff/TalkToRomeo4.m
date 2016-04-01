@@ -43,6 +43,7 @@ for i = targets
     values = [encoderPos(i),xTarget_HB(i),xTarget_LB(i)];
     fwrite(Serial,values);
     %Scan for message
+    
     arduinoMessage = fscanf(Serial);
     fprintf('\n%s\n',arduinoMessage);
 end
