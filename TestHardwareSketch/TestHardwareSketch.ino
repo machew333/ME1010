@@ -34,9 +34,12 @@ const int rightSwitchPin = 12;
 const int servoPin = 9;
 const int solenoidDirPin = 7;
 const int solenoidPowPin = 6;
+const int pinIRLED = 13;
+const int reloaderServoPin = 10;
 
 // *** Create Servo Objects ***
 Servo launcherServo;
+Servo reloaderServo;
 // *** Declare & Initialize Program Variables ***
 int buttonReading = 0;
 int motorPower = 255;
@@ -58,6 +61,10 @@ int servoSmallIncrement = 1;
 int servoLargeIncrement = 5;
 int shotDelay = 5000;
 int desiredPosition = 0;
+int ledOnTime = 1000;
+int ledOffTime = 1000;
+int reloaderServoAngle1 = 30; //X
+int reloaderServoAngle2 = 0; //Y
 
 /********************
  ** Setup Function **
@@ -74,14 +81,18 @@ pinMode(leftSwitchPin, INPUT_PULLUP);
 pinMode(rightSwitchPin, INPUT_PULLUP); 
 launcherServo.attach(servoPin); 
 pinMode(solenoidDirPin,OUTPUT); 
+pinMode(pinIRLED, OUTPUT);
+reloaderServo.attach(reloaderServoPin);
   // *** Initialize Serial Communication ***
 Serial.begin(9600);    
   // *** Take Initial Readings ***
 lastEncoderBoolean = GetEncoderBoolean();  
 lastTime = millis();
-launcherServo.write(0);  
+launcherServo.write(0); 
+reloaderServo.write(0); 
   // *** Move Hardware to Desired Initial Positions ***
 launcherServo.write(launcherServoAngle);
+reloaderServo.write(reloaderServoAngle1);
 help();
 }// end setup() function
 
@@ -152,6 +163,20 @@ if(Serial.available()){
       TestMoveLauncher();
     }
     break;
+
+    case 'i':
+    PRINT_STRING(IRLEDDes);
+    while (!Serial.available()){
+      TestIRLED();
+    }
+    break;
+
+    case 'r':
+    PRINT_STRING(ReloaderDes);
+    while (!Serial.available()){
+      TestReloader();
+    }
+    break;
     
     case 'k':
     PRINT_STRING(Killed);
@@ -160,6 +185,7 @@ if(Serial.available()){
     }
     break;
 
+<<<<<<< HEAD
 //    case 'r':
 //    PRINT_STRING(AimFireDes);
 //    while (!Serial.available()) {
@@ -167,6 +193,8 @@ if(Serial.available()){
 //    }
 //    break;
     
+=======
+>>>>>>> master
     case 'h':
     help();
     break;
@@ -285,6 +313,14 @@ void MoveLauncher(int desiredPosition){
     switchValRight = digitalRead(rightSwitchPin);
   }
   BrakeMotor();
+  if (switchValLeft == 1){
+    counts = 0;
+    Serial.println("Launcher at home position. Counts reset to 0");
+  }
+  if (switchValRight == 1){
+    counts = 37; //37 is verified to be max counts
+    Serial.println("Launcher is at reloading position. Counts set to 37");
+  }
 }
 
 void help(){
