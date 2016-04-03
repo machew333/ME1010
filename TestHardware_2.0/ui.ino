@@ -8,7 +8,6 @@ void waitForSerialBytes(int numBytes) {
 
 //Type in command and end with enter or semicolon
 void getCommand() { 
-  Serial.println("Input command and hit enter");
   Serial.flush(); // clear Serial in case there are any residual bytes
   bool commandOver = 0;
   String command = "";
@@ -40,7 +39,7 @@ while (Serial.available()) {
 if (command.length() ==1) {
   singleCommand(commandByte);
 }
-else if (command.length() >=4) {
+else if (command.length() >=2) {
   complexCommand(command);
 }
 
@@ -55,7 +54,6 @@ else {
 void singleCommand(char commandByte) {
   char userInput = commandByte;
   
-  Serial.println(userInput);
   switch(userInput) {
     
     case 'b':
@@ -160,7 +158,11 @@ void complexCommand(String command) {
   // ** Run command
 String action = command.substring(0,2);
 //take everything after whitespace
-String value = command.substring(3,command.length());
+String value;
+if (command.length() > 3) {
+  value = command.substring(3,command.length());
+}
+
 
 //Serial.println(action);
 //Serial.println(value);
@@ -171,15 +173,26 @@ if (action == "mv") {
   launcherServoAngle = value.toInt();
   launcherServoAngle = constrain(launcherServoAngle,0,180);
   launcherServo.write(launcherServoAngle);
+
+  Serial.print("Servo moved to ");
+  Serial.print(launcherServoAngle);
+  Serial.println(" degrees");
+  
 }
-if (action == "rl") {
+
+else if (action == "rl") {
 TestReloader();  
+}
+else if (action == "ls") {
+  launcherServoAngle = launcherServo.read();
+  Serial.print("Launch servo = ");
+  Serial.println(launcherServoAngle);
+  
 }
 else 
 {
   Serial.println("Command was not understood");
 }
-
 
 }
 

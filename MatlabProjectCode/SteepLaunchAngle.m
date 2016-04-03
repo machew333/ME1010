@@ -1,10 +1,10 @@
-function [ thetaLaunch ] = SteepLaunchAngle( d,v0,xTarget )
+function [ thetaLaunch ] = SteepLaunchAngle( d,v0,xTarget, empiricalVector )
 %SteepLaunchAngle computes the launch angle for given target distances 
-[maxDistance,maxDistanceAngle] = MaxDistance2(d,v0);
+[maxDistance,maxDistanceAngle] = MaxDistance2(d,v0, empiricalVector);
 for i=1:length(xTarget)
     if(xTarget(i)<=maxDistance)
         theta = 90:-.1:maxDistanceAngle;
-        xLand = LandingDistance(d,v0,theta);
+        xLand = LandingDistance(d,v0,theta, empiricalVector);
         distError = abs(xLand - xTarget(i));
         [minDiff, minDiffIndex] = min(distError);
         thetaLaunch(i) = theta(minDiffIndex);

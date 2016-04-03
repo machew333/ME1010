@@ -1,9 +1,9 @@
-function [ maxDistance, maxDistanceAngle ] = MaxDistance2( d,v0 )
+function [ maxDistance, maxDistanceAngle ] = MaxDistance2( d,v0, empiricalVector )
 %MaxDistance2 takes vector d and initial velocity adn outputes maxDistance
 %and maxDistanceAngle
 maxDistance = 0;
 for theta=0:.01:90
-    distance = LandingDistance(d,v0,theta);
+    distance = LandingDistance(d,v0,theta,empiricalVector);
     if distance > maxDistance
         maxDistance = distance;
         maxDistanceAngle = theta;

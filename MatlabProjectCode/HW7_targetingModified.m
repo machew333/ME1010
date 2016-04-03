@@ -56,6 +56,7 @@ for i=1:length(thetaServo)
 end
 
 %% Part 3
+tic
 % Test Case 1:
 %{
 load d_vector;
@@ -99,3 +100,4 @@ end
 % for i=1:length(thetaServo)
 %     fprintf('Target Distance = %.2fm --> Launch angle = %.2f deg --> Servo angle = %.2f deg\n',xTarget(i),thetaLaunch(i),thetaServo(i));
 % end
+toc
