@@ -15,23 +15,21 @@ empiricalData = xlsread('EmpiricalData.xlsx');
 angles = empiricalData(:,1);
 distance = empiricalData(:,2);
 
-empiricalVector = polyfit(angles,distance,4);
+% y = x. polyfit(x,y,degree) get angles as a function of distance 
+% Form = a_n * x^n + a_n-1 * x^n-1 + a_n-2 * x^n-2 + ....
+% empiricalVector =[a_n, a_n-1, a_n-2, .... a_0 ] 
+empiricalVector = polyfit(distance,angles,12);
 
 % Test Case 2:
 load d_vector;
-%load H_vector;
-load Hbest;
-H = Hbest;
 xTarget = [.7:.05:1.2];
 load optimal_offsets;
-load optimal_offsets_3;
 load optimal_v0;
-load optimal_v0_2;
-thetaLaunch = SteepLaunchAngle(d,optimal_v0,xTarget, empiricalVector);
-thetaServo = ThetaServo(H,thetaLaunch,optimal_offsets); % Original Data
+thetaServo = ThetaServo(xTarget,empiricalVector); %New empirical method
+
 fprintf('\nOriginal offsets and original v0\n');
 for i=1:length(thetaServo)
-    fprintf('Target Distance = %.2fm --> Launch angle = %.2f deg --> Servo angle = %.2f deg\n',xTarget(i),thetaLaunch(i),thetaServo(i));
+    fprintf('Target Distance = %.2fm --> Servo angle = %d deg\n',xTarget(i),thetaServo(i));
 end
 
 

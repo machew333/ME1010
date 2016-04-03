@@ -1,10 +1,27 @@
-function [ thetaServo ] = ThetaServo( H, thetaLaunch, offsets )
-%ThetaServo computes the servo angle
-thetaServoOffset = offsets(1);
-thetaLaunchOffset = offsets(2);
-theta2 = thetaLaunch - thetaLaunchOffset;
-theta4 = ThetaFour(H,theta2);
-thetaServo = theta4 + thetaServoOffset;
+function [ thetaServo ] = ThetaServo( xTarget, empiricalVector )
+%ThetaServo computes the servo angle to hit a target
+[~,numTerms] = size(empiricalVector);
+%summation
+sigma = 0;
+
+%Sum all terms of the empiricalFunction vector
+for n = 1:numTerms
+    %Counting down through matrix
+    % y = ax^n * bx^n-1 * cx^n-2 * ..... (theta = x, xLand = y)
+    nthTerm = empiricalVector(n) *( xTarget .^ (numTerms - n));
+    sigma = sigma + nthTerm;
+end
+
+thetaServo = round(sigma);
+    
+if nargout ==0
+    plot(thetaServo,xLand);
+    xlabel('theta');
+    ylabel('Distance [m]');
+end
+
+
+
 
 end
 
