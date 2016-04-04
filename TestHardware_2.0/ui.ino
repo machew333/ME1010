@@ -8,7 +8,7 @@ void waitForSerialBytes(int numBytes) {
 
 //Type in command and end with enter or semicolon
 void getCommand() { 
-  Serial.flush(); // clear Serial in case there are any residual bytes
+//  Serial.flush(); // clear Serial in case there are any residual bytes
   bool commandOver = 0;
   String command = "";
   char commandByte;
@@ -20,11 +20,10 @@ void getCommand() {
 //Wait until the user has typed something.
 //Then keep reading until there is nothing left
 
-//wait for input
-while (!Serial.available()) {
-  delay(100);
-  continue; //twiddle your thumbs
-}
+//wait for bytes to arrive
+delay(500);
+
+//Serial.println(Serial.available());
 //read until empty
 while (Serial.available()) {
   commandByte = char(Serial.read());
@@ -33,7 +32,7 @@ while (Serial.available()) {
   }
   command += String(commandByte);
 }
-//Serial.println(command);
+Serial.println(command);
 
 
 if (command.length() ==1) {
@@ -163,9 +162,9 @@ if (command.length() > 3) {
   value = command.substring(3,command.length());
 }
 
-
-//Serial.println(action);
-//Serial.println(value);
+//
+Serial.println(action);
+Serial.println(value);
 
 
 if (action == "mv") {

@@ -109,7 +109,7 @@ help();
  *******************/
 void loop(void){
    //PUT YOUR MAIN CODE HERE, TO RUN REPEATEDLY
-if(Serial.available() == 1){
+if(Serial.available()){
   getCommand();
 }
  

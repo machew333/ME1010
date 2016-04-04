@@ -12,7 +12,7 @@ for n = 1:numTerms
     sigma = sigma + nthTerm;
 end
 
-thetaServo = round(sigma);
+thetaServo = (sigma);
     
 if nargout ==0
     plot(thetaServo,xLand);

@@ -18,7 +18,7 @@ distance = empiricalData(:,2);
 % y = x. polyfit(x,y,degree) get angles as a function of distance 
 % Form = a_n * x^n + a_n-1 * x^n-1 + a_n-2 * x^n-2 + ....
 % empiricalVector =[a_n, a_n-1, a_n-2, .... a_0 ] 
-empiricalVector = polyfit(distance,angles,12);
+empiricalVector = polyfit(distance,angles,6);
 
 % Test Case 2:
 load d_vector;
@@ -29,7 +29,7 @@ thetaServo = ThetaServo(xTarget,empiricalVector); %New empirical method
 
 fprintf('\nOriginal offsets and original v0\n');
 for i=1:length(thetaServo)
-    fprintf('Target Distance = %.2fm --> Servo angle = %d deg\n',xTarget(i),thetaServo(i));
+    fprintf('Target Distance = %.2fm --> Servo angle = %.4f deg\n',xTarget(i),thetaServo(i));
 end
 
 
