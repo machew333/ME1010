@@ -8,14 +8,15 @@ sigma = 0;
 for n = 1:numTerms
     %Counting down through matrix
     % y = ax^n * bx^n-1 * cx^n-2 * ..... (theta = x, xLand = y)
-    nthTerm = empiricalVector(n) *( xTarget .^ (numTerms - n));
+    nthTerm = empiricalVector(n) *( xTarget .^ (numTerms - n))
     sigma = sigma + nthTerm;
 end
 
 thetaServo = (sigma);
     
 if nargout ==0
-    plot(thetaServo,xLand);
+    figure
+    plot(thetaServo,xTarget);
     xlabel('theta');
     ylabel('Distance [m]');
 end
