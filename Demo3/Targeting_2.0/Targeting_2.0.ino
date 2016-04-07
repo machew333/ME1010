@@ -7,7 +7,7 @@ int servoAngles[6];
 void setup() {
   Serial.begin(9600);
   double d[3] = {0.041,0.190,0.067};
-  double vo = 3.31;
+  double vo = 3.2;
   double targetDist = 0.95;
 
   double H[] = {0.1313, 0.0960, 0.0880, 0.0475};

@@ -91,8 +91,7 @@ double ServoAngle(double xTarget ) {
  * I tried a bunch of the higher polynomials and they didn't work. I think there was some significant rounding errors
  * We are only off by 1 degree for a few of the targets. Otherwise it works
  */
-
- //Good fit
+ 
  double distToServoFit[] = { -310.800310800325, 832.634032634070, -884.864024864058, 410.515151515161};
  int polyLength =sizeof(distToServoFit)/sizeof(double);
  

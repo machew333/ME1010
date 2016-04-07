@@ -64,9 +64,11 @@ int ledOnTime = 1000;
 int ledOffTime = 1000;
 int reloaderServoAngle1 = 30; //X
 int reloaderServoAngle2 = 0; //Y
+
+
+
 byte driveTo[6] = {30,25,20,15,10,5}; // encoder positions of targets in cm
 int writeToServo[6] = {30,50,70,90,110,130}; // servo angles in degrees
-byte target = 0; // variable to keep track of which target you are on
 
 /********************
  ** Setup Function **
@@ -86,7 +88,9 @@ pinMode(solenoidDirPin,OUTPUT);
 pinMode(pinIRLED, OUTPUT);
 reloaderServo.attach(reloaderServoPin);
   // *** Initialize Serial Communication ***
-Serial.begin(9600);    
+Serial.begin(9600);
+
+    
   // *** Take Initial Readings ***
 lastEncoderBoolean = GetEncoderBoolean();  
 lastTime = millis();
@@ -100,6 +104,7 @@ reloaderServo.write(reloaderServoAngle1);
 while(!Serial.available()){
   continue; //do nothing - wait for character
 }
+
 int switchValLeft = digitalRead(leftSwitchPin); 
 int switchValRight = digitalRead(rightSwitchPin);
 char charBegin = Serial.read();
@@ -108,7 +113,7 @@ if (switchValLeft == 1){
     Serial.println("Launcher at home position. Counts reset to 0");
   } else {
     Serial.println("Launcher will be sent to home position");
-    MoveLauncher(0); //Sends launcher to home position (0)
+    MoveLauncher(-100); //Sends launcher to home position (0)
     Serial.println("Timer is being started");
     digitalWrite(pinIRLED,1);
     delay(1000);
@@ -119,29 +124,27 @@ if (switchValLeft == 1){
 
 
 /*******************
- ** Serial Event  **
- *******************/
- //Gets called when the Serial is doing something
-// void serialEvent() {
-//  
-// }
-
-/*******************
  ** Loop Function **
  *******************/
+byte target = 0; // variable to keep track of which target you are on
 void loop(void){
    //PUT YOUR MAIN CODE HERE, TO RUN REPEATEDLY
 if(target < 5){ //target is global variable to keep track of which target
   MoveLauncher(driveTo[target]); //driveTo is array of motor positions for targets in cm - FIXME: make sure cm matches counts
   launcherServo.write(writeToServo[target]); //writeToServo is an array of angles to be written to the servo
+  delay(1000);
   FireSolenoid();
+  delay(1000);
   Reload();
   target++; //increment target by one
 } else {
   MoveLauncher(driveTo[target]); //driveTo is array of motor positions for targets in cm - FIXME: make sure cm matches counts
   launcherServo.write(writeToServo[target]); //writeToServo is an array of angles to be written to the servo
+  delay(1000);
   FireSolenoid();
-  MoveLauncher(0); //move to home position
+  Serial.println("Waiting to move launcher");
+  delay(1000);
+  MoveLauncher(-2); //move to home position
   digitalWrite(pinIRLED,1);
   delay(1000);
   digitalWrite(pinIRLED,0); //Turns IRLED on to stop timer
@@ -271,14 +274,14 @@ int GetEncoderBoolean(){
 }
 
 void Reload(){
-  launcherServo.write(45); //FIXME - check which angle fits under launcher best
-  MoveLauncher(37); //37 is reloading position
+  launcherServo.write(0); //FIXME - check which angle fits under launcher best
+  MoveLauncher(40); //37 is reloading position
   reloaderServo.write(reloaderServoAngle2);
   Serial.println("Drop ball"); //Following lines are from TestReloader - FIXME: ensure they are optimized
-  delay(3000);
+  delay(1000);
   reloaderServo.write(reloaderServoAngle1);
   Serial.println("Reload");
-  delay(3000);
+  delay(1000);
 }
 
 void KillSwitch() {
