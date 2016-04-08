@@ -29,8 +29,14 @@ while (~ Serial.BytesAvailable)
 end
 fprintf('found him\n');
 
+
 targetImage = imread('blue_A1.bmp');
+targetRGB = ColorPicker(targetImage);
 [centroidRows, centroidCols, blackoutIMG] = FindAllTargetCentroids(targetImage,targetRGB);
+image(blackoutIMG)
+hold on
+plot(centroidCols,centroidRows,'wx');
+
 centroidRows = floor(centroidRows) 
 centroidCols = floor(centroidCols) 
 
@@ -48,7 +54,6 @@ for i = targets
     arduinoMessage = fscanf(Serial);
     fprintf('%s',arduinoMessage);
 end
-
 
 while(true)
     if (Serial.BytesAvailable)
