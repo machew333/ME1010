@@ -1,4 +1,3 @@
-
 double LandingDistance(double d[], double vo, double theta) {
   theta = Deg2Rad(theta);
   double g = 9.81;
@@ -45,7 +44,7 @@ double RangeAngle( double d[], double vo) {
 
 
 
-double LaunchAngle( double[], double vo, double xTarget) {
+double LaunchAngle( double xTarget) {
   //Empirical function generated from data 
   double distanceToLaunchFit[] = {-27.1950,   63.5198,  -79.4833,  105.8485};
   int polyLength =sizeof(distanceToLaunchFit)/sizeof(double);
@@ -55,13 +54,13 @@ double LaunchAngle( double[], double vo, double xTarget) {
 }
 
 
-void TargetServoAngles(double d[], double vo, double H[], double thetaSO, double thetaLO, double xTarget[]) {
+void TargetServoAngles(double xTarget[]) {
   int len = 6;
   double launchAngles[len];
   double servoAngleDoubs[len];
 
   for (int i = 0; i < len; i++) {
-    launchAngles[i] = LaunchAngle(d,vo,xTarget[i]);
+    launchAngles[i] = LaunchAngle(xTarget[i]);
     servoAngleDoubs[i] = ServoAngle(xTarget[i]);
     writeToServo[i] = int(round(servoAngleDoubs[i]));
 
@@ -152,14 +151,5 @@ double SumPolynomial(double x,double polyFit[], int polyLength) {
   return sigma;
   
 }
-
-
-
-
-
-
-
-
-
 
 

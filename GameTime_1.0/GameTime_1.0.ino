@@ -17,8 +17,6 @@ Pin Usage:    Pin type/number     Hardware
  ** #defines and #includes **
  ****************************/ 
 #include <Servo.h> 
-#define STRING(x) (strcpy_P(tmp_string, (char *)x))
-#define PRINT_STRING(y) (Serial.print(STRING(y)))
 /***********************
  ** Global Variables ***
  ***********************/
@@ -66,9 +64,11 @@ int reloaderServoAngle1 = 30; //X
 int reloaderServoAngle2 = 0; //Y
 
 
+//Targets
+byte driveTo[6];
+double xTarget[6];
 
-byte driveTo[6] = {30,25,20,15,10,5}; // encoder positions of targets in cm
-int writeToServo[6] = {30,50,70,90,110,130}; // servo angles in degrees
+int writeToServo[6];
 
 /********************
  ** Setup Function **
@@ -87,8 +87,6 @@ launcherServo.attach(servoPin);
 pinMode(solenoidDirPin,OUTPUT); 
 pinMode(pinIRLED, OUTPUT);
 reloaderServo.attach(reloaderServoPin);
-  // *** Initialize Serial Communication ***
-Serial.begin(9600);
 
     
   // *** Take Initial Readings ***
@@ -100,13 +98,49 @@ reloaderServo.write(0);
 launcherServo.write(launcherServoAngle);
 reloaderServo.write(reloaderServoAngle1);
 
-//Set Up for Demo 2:
-while(!Serial.available()){
-  continue; //do nothing - wait for character
-}
+  // *** Initialize Serial Communication ***
+Serial.begin(9600);
+Serial.write(' ');
+
+int lenTargets = 6;
+  byte matlabData[3];
+  String reply = "";
+
+  for (int i = 0; i<lenTargets; i++) {
+
+    while (!Serial.available()) {
+      continue; //do nothing
+    }
+    Serial.readBytes(matlabData,3);
+    int encoderPos = matlabData[0];
+    driveTo[i] = encoderPos;
+    int xTarget_HB = matlabData[1];
+    int xTarget_LB = matlabData[2];
+    int xTarget_mm = 256 * xTarget_HB + xTarget_LB;
+    double xTarget_m = xTarget_mm / 1000.0;
+    xTarget[i] = xTarget_m;
+    int targetNumber = i+1;
+    reply = "For target "+String(targetNumber) + ", drive to stripe " + String(encoderPos) + " and aim for " +String(xTarget_m) + " m";
+
+    Serial.println(reply);      
+  }
+
+
+ TargetServoAngles(xTarget);
+  String targetMessage;
+  for (int i = 0; i< 6; i++ ) {
+    targetMessage = "Target distance = " + String(xTarget[i]) + " m --> Servo angle = " + String(writeToServo[i]);
+    Serial.println(targetMessage);
+  }
+
+  Serial.println("");
+
+
 
 int switchValLeft = digitalRead(leftSwitchPin); 
 int switchValRight = digitalRead(rightSwitchPin);
+
+
 char charBegin = Serial.read();
 if (switchValLeft == 1){
     counts = 0;
@@ -119,6 +153,9 @@ if (switchValLeft == 1){
     delay(1000);
     digitalWrite(pinIRLED,0); //Turns IRLED on to start timer
   }
+
+ 
+  
 
 }// end setup() function
 
