@@ -46,6 +46,7 @@ int irSensorReading = 0;
 boolean currentEncoderBoolean = 0;
 boolean dispBool = 0;
 boolean lastEncoderBoolean;
+boolean previousEncoderBoolean;
 unsigned long lastTime;
 unsigned long currentTime = 0;
 int counts = 0;
@@ -240,11 +241,13 @@ void BrakeMotor(){
 }
 
 void CountStripes(){
+  delay(10);
+  previousEncoderBoolean = currentEncoderBoolean;
   currentEncoderBoolean = GetEncoderBoolean();
   currentTime = millis();
   double deltaTime = currentTime - lastTime;
   
-  if (deltaTime > 10 && currentEncoderBoolean != lastEncoderBoolean) {
+  if (deltaTime > 10 && currentEncoderBoolean != lastEncoderBoolean && currentEncoderBoolean == previousEncoderBoolean) {
     if (motorLeft == 1){
       counts--;
       Serial.print("Counts = ");
