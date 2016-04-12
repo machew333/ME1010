@@ -20,7 +20,6 @@ Pin Usage:    Pin type/number     Hardware
 /***********************
  ** Global Variables ***
  ***********************/
-char tmp_string[100]; //for storing print string chars
 // *** Declare & Initialize Pins ***
 const int buttons = A7;
 int motorDirPin = 4;
@@ -38,7 +37,6 @@ const int reloaderServoPin = 10;
 Servo launcherServo;
 Servo reloaderServo;
 // *** Declare & Initialize Program Variables ***
-int buttonReading = 0;
 int motorPower = 255;
 boolean motorOn = 0;
 boolean motorLeft = 1;
@@ -46,7 +44,6 @@ int irSensorReading = 0;
 boolean currentEncoderBoolean = 0;
 boolean dispBool = 0;
 boolean lastEncoderBoolean;
-boolean previousEncoderBoolean;
 unsigned long lastTime;
 unsigned long currentTime = 0;
 int counts = 0;
@@ -70,6 +67,8 @@ byte driveTo[6];
 double xTarget[6];
 
 int writeToServo[6];
+
+
 
 /********************
  ** Setup Function **
@@ -127,11 +126,23 @@ int lenTargets = 6;
   }
 
 
+ TargetServoAngles(xTarget);
+  String targetMessage;
+  for (int i = 0; i< 6; i++ ) {
+    targetMessage = "Target distance = " + String(xTarget[i]) + " m --> Servo angle = " + String(writeToServo[i]);
+    Serial.println(targetMessage);
+  }
+
+//Tell Matlab to end serial stuff
+Serial.println("");
+
+
+
 int switchValLeft = digitalRead(leftSwitchPin); 
 int switchValRight = digitalRead(rightSwitchPin);
 
 
-char charBegin = Serial.read();
+char charBegin = Serial.read(); //I think this is meant to clear the serial bus. not sure why 
 if (switchValLeft == 1){
     counts = 0;
     Serial.println("Launcher at home position. Counts reset to 0");
@@ -145,14 +156,7 @@ if (switchValLeft == 1){
   }
 
  
- TargetServoAngles(xTarget);
-  String targetMessage;
-  for (int i = 0; i< 6; i++ ) {
-    targetMessage = "Target distance = " + String(xTarget[i]) + " m --> Servo angle = " + String(writeToServo[i]);
-    Serial.println(targetMessage);
-  }
-
-  Serial.println("");
+  
 
 }// end setup() function
 
@@ -162,7 +166,7 @@ if (switchValLeft == 1){
  *******************/
 byte target = 0; // variable to keep track of which target you are on
 void loop(void){
-   //PUT YOUR MAIN CODE HERE, TO RUN REPEATEDLY
+  
 if(target < 5){ //target is global variable to keep track of which target
   MoveLauncher(driveTo[target]); //driveTo is array of motor positions for targets in cm - FIXME: make sure cm matches counts
   launcherServo.write(writeToServo[target]); //writeToServo is an array of angles to be written to the servo
@@ -170,7 +174,7 @@ if(target < 5){ //target is global variable to keep track of which target
   FireSolenoid();
   delay(1000);
   Reload();
-  target++; //increment target by one
+  target++;
 } else {
   MoveLauncher(driveTo[target]); //driveTo is array of motor positions for targets in cm - FIXME: make sure cm matches counts
   launcherServo.write(writeToServo[target]); //writeToServo is an array of angles to be written to the servo
@@ -182,6 +186,7 @@ if(target < 5){ //target is global variable to keep track of which target
   digitalWrite(pinIRLED,1);
   delay(1000);
   digitalWrite(pinIRLED,0); //Turns IRLED on to stop timer
+  
   while(true){
     continue; //do nothing, waits in endless loops
   }
@@ -241,13 +246,11 @@ void BrakeMotor(){
 }
 
 void CountStripes(){
-  delay(10);
-  previousEncoderBoolean = currentEncoderBoolean;
   currentEncoderBoolean = GetEncoderBoolean();
   currentTime = millis();
   double deltaTime = currentTime - lastTime;
   
-  if (deltaTime > 10 && currentEncoderBoolean != lastEncoderBoolean && currentEncoderBoolean == previousEncoderBoolean) {
+  if (deltaTime > 10 && currentEncoderBoolean != lastEncoderBoolean) {
     if (motorLeft == 1){
       counts--;
       Serial.print("Counts = ");
