@@ -7,24 +7,24 @@ matchIndexes = (ogImage(:,:,1) == targetRGB(1)) & (ogImage(:,:,2) == targetRGB(2
 [top,left] = find(matchIndexes,1); %Top row and left column
 
 
-for (col = left:cols) %Checks all columns for color match, breaks when different color
+for (col = left:cols)
     if (~matchIndexes(top,col))
-        right = col-1; %Right column of target
+        right = col-1;
         break
     end
 end
 
-for (row = top:rows) %Checks all rows for color match, breaks when different color
+for (row = top:rows) 
     if (~matchIndexes(row,left))
-        bottom = row-1; %Bottom row of target
+        bottom = row-1;
         break
     end
 end
 
-midRow = (bottom + top)/2.0; %Centroid row
-midCol = (right + left)/2.0; %Centroid column
+midRow = (bottom + top)/2.0;
+midCol = (right + left)/2.0;
 % top,left,bottom,right
-ogImage(top:bottom,left:right,:) = 55; %Turns target black
+ogImage(top:bottom,left:right,:) = 55;
 modImage = ogImage;
 
 

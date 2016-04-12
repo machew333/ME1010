@@ -1,17 +1,16 @@
 function [ targetRows, targetCols, blackoutIMG ] = FindAllTargetCentroids( ogImage,targetRGB)
-%UNTITLED11 Summary of this function goes here
-%   Detailed explanation goes here
-targetCount = 6;
+%FindAllTargetCentroids finds the centroids of all the targtes
+targetCount = 6; %Number of targets
 targetRows(6) = -1;
 targetCols(6) = -1;
 
 for (i = 1:targetCount)
     [row,col,ogImage] = FindTargetCentroid(ogImage,targetRGB);
-    targetRows(i) = row;
+    targetRows(i) = row; %Creates row and column array for all centroids
     targetCols(i) = col;
 end
 
-blackoutIMG = ogImage;
+blackoutIMG = ogImage; %Returns blacked out image
     
         
 

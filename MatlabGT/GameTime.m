@@ -30,14 +30,14 @@ end
 fprintf('found him\n');
 
 
-targetImage = imread('blue_A1.bmp');
+targetImage = imread('blue_A1.bmp'); %Reads target image
 targetRGB = ColorPicker(targetImage);
-[centroidRows, centroidCols, blackoutIMG] = FindAllTargetCentroids(targetImage,targetRGB);
+[centroidRows, centroidCols, blackoutIMG] = FindAllTargetCentroids(targetImage,targetRGB); %Finds centroids of targets
 image(blackoutIMG)
 hold on
-plot(centroidCols,centroidRows,'wx');
+plot(centroidCols,centroidRows,'wx'); %Puts x on targeted centroits
 
-centroidRows = floor(centroidRows) 
+centroidRows = floor(centroidRows) %Makes centroid values integers 
 centroidCols = floor(centroidCols) 
 
 
@@ -49,9 +49,9 @@ xTarget_LB = xTarget_mm - (256 * xTarget_HB);
 targets = 1:6;
 for i = targets
     values = [encoderPos(i),xTarget_HB(i),xTarget_LB(i)];
-    fwrite(Serial,values);
+    fwrite(Serial,values); %Writes target values to ardiuno
     %Scan for message
-    arduinoMessage = fscanf(Serial);
+    arduinoMessage = fscanf(Serial); 
     fprintf('%s',arduinoMessage);
 end
 
@@ -61,7 +61,7 @@ while(true)
         arduinoMessage = arduinoMessage(1:end-2);
         
         if (length(arduinoMessage) ==0)
-            break;
+            break; %Ends function if blank message is recieved from Ardiuno
         else
             fprintf('\n%s',arduinoMessage);
         end
