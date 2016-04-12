@@ -126,17 +126,6 @@ int lenTargets = 6;
   }
 
 
- TargetServoAngles(xTarget);
-  String targetMessage;
-  for (int i = 0; i< 6; i++ ) {
-    targetMessage = "Target distance = " + String(xTarget[i]) + " m --> Servo angle = " + String(writeToServo[i]);
-    Serial.println(targetMessage);
-  }
-
-  Serial.println("");
-
-
-
 int switchValLeft = digitalRead(leftSwitchPin); 
 int switchValRight = digitalRead(rightSwitchPin);
 
@@ -155,7 +144,14 @@ if (switchValLeft == 1){
   }
 
  
-  
+ TargetServoAngles(xTarget);
+  String targetMessage;
+  for (int i = 0; i< 6; i++ ) {
+    targetMessage = "Target distance = " + String(xTarget[i]) + " m --> Servo angle = " + String(writeToServo[i]);
+    Serial.println(targetMessage);
+  }
+
+  Serial.println("");
 
 }// end setup() function
 
