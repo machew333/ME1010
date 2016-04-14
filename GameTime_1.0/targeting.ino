@@ -70,7 +70,7 @@ double Rad2Deg(double radians) {
 
 }
 
- //Add up all terms of the polynomial, (i.e. a * x^7 + b * x^6 + ....)
+ //Add up all terms of the polynomial, (i.e. a*x^3 + b*x^2 + ....)
 double SumPolynomial(double x,double polyFit[], int polyLength) { 
   long double sigma = 0;
   long double nthTerm;

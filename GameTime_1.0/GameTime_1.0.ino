@@ -12,7 +12,6 @@ Pin Usage:    Pin type/number     Hardware
               ----------------    ----------------  
 
 ******************************************************************/
- 
 /****************************
  ** #defines and #includes **
  ****************************/ 
@@ -32,9 +31,11 @@ const int solenoidPowPin = 6;
 const int pinIRLED = 13;
 const int reloaderServoPin = 10;
 
+
 // *** Create Servo Objects ***
 Servo launcherServo;
 Servo reloaderServo;
+
 // *** Declare & Initialize Program Variables ***
 int motorPower = 255;
 boolean motorOn = 0;
@@ -65,14 +66,16 @@ int reloaderServoAngle2 = 0; //Y
 //Targets
 byte driveTo[6];
 double xTarget[6];
-
 int writeToServo[6];
+
+
 
 
 
 /********************
  ** Setup Function **
  ********************/  
+ 
 void setup(void){
   // PUT YOUR SETUP CODE HERE, TO RUN ONCE:
 
@@ -99,34 +102,43 @@ reloaderServo.write(reloaderServoAngle1);
 
   // *** Initialize Serial Communication ***
 Serial.begin(9600);
+//Start communication with Matlab script
 Serial.write(' ');
 
+
+byte matlabData[3];
+String reply = "";
 int lenTargets = 6;
-  byte matlabData[3];
-  String reply = "";
 
   for (int i = 0; i<lenTargets; i++) {
 
     while (!Serial.available()) {
-      continue; //do nothing
+      continue; //wait for serial message
     }
-    Serial.readBytes(matlabData,3);
+    
+    Serial.readBytes(matlabData,3); //encoder, target high bit, target low bit
+
     int encoderPos = matlabData[0];
-    driveTo[i] = encoderPos;
+    driveTo[i] = encoderPos; 
+
+    //recombine target position bytes
     int xTarget_HB = matlabData[1];
     int xTarget_LB = matlabData[2];
     int xTarget_mm = 256 * xTarget_HB + xTarget_LB;
     double xTarget_m = xTarget_mm / 1000.0;
     xTarget[i] = xTarget_m;
+
+    
     int targetNumber = i+1;
     reply = "For target "+String(targetNumber) + ", drive to stripe " + String(encoderPos) + " and aim for " +String(xTarget_m) + " m";
-
     Serial.println(reply);      
   }
 
+//calculate servo angles and store in writeToServo[]
+TargetServoAngles(xTarget);
 
- TargetServoAngles(xTarget);
-  String targetMessage;
+
+String targetMessage;
   for (int i = 0; i< 6; i++ ) {
     targetMessage = "Target distance = " + String(xTarget[i]) + " m --> Servo angle = " + String(writeToServo[i]);
     Serial.println(targetMessage);
@@ -138,14 +150,15 @@ int switchValLeft = digitalRead(leftSwitchPin);
 int switchValRight = digitalRead(rightSwitchPin);
 
 
-char charBegin = Serial.read(); //I think this is meant to clear the serial bus. not sure why 
+Serial.read(); //clear serial queue
+ 
 if (switchValLeft == 1){
     counts = 0;
     Serial.println("Launcher at home position. Counts reset to 0");
   } else {
     Serial.println("Launcher will be sent to home position");
     MoveLauncher(-100); //Sends launcher to home position (0)
-    Serial.println("Timer is being started");
+    Serial.println("Timer is being started. It's game time.");
     digitalWrite(pinIRLED,1);
     delay(1000);
     digitalWrite(pinIRLED,0); //Turns IRLED on to start timer
@@ -157,33 +170,46 @@ if (switchValLeft == 1){
 }// end setup() function
 
 
+
+
+
+
 /*******************
  ** Loop Function **
  *******************/
-byte target = 0; // variable to keep track of which target you are on
+byte target = 0; // to keep track of which target you are on
+
 void loop(void){
   
-if(target < 5){ //target is global variable to keep track of which target
-  MoveLauncher(driveTo[target]); //driveTo is array of motor positions for targets in cm - FIXME: make sure cm matches counts
-  launcherServo.write(writeToServo[target]); //writeToServo is an array of angles to be written to the servo
+if (target < 5){ 
+  MoveLauncher(driveTo[target]); //move launcher to target position
+  launcherServo.write(writeToServo[target]); //move servo to launch angle
+  
   delay(1000);
   FireSolenoid();
   delay(1000);
+  
   Reload();
   target++;
-} else {
-  MoveLauncher(driveTo[target]); //driveTo is array of motor positions for targets in cm - FIXME: make sure cm matches counts
-  launcherServo.write(writeToServo[target]); //writeToServo is an array of angles to be written to the servo
+} 
+
+else {
+  MoveLauncher(driveTo[target]); //move launcher to target position
+  launcherServo.write(writeToServo[target]); //move servo to launch angle
+  
   delay(1000);
   FireSolenoid();
+  
   Serial.println("Waiting to move launcher");
   delay(1000);
+  
   MoveLauncher(-2); //move to home position
   digitalWrite(pinIRLED,1);
   delay(1000);
-  digitalWrite(pinIRLED,0); //Turns IRLED on to stop timer
+  digitalWrite(pinIRLED,0); //Turn irled on. Stop timer. Ride off into the sunset.
 
-  //Tell Matlab to end serial stuff
+  
+//Tell Matlab to end serial stuff
 Serial.println("");
 
   
@@ -194,11 +220,13 @@ Serial.println("");
 
 } // end loop() function
 
+
+
+
+
 /****************************
  ** User-Defined Functions **
  ****************************/
-
-
 
 void TurnMotorOn(){
   digitalWrite(motorDirPin,motorLeft);
@@ -238,8 +266,6 @@ void CountStripes(){
   lastTime = currentTime;
   lastEncoderBoolean = currentEncoderBoolean;
   }
-  
-
 }
 
 void FireSolenoid(){
@@ -248,7 +274,7 @@ void FireSolenoid(){
   Serial.println("Firing!");
   delay(solenoidActivationTime);
   analogWrite(solenoidPowPin,0);
-  Serial.println("Bombs out");
+  Serial.println("Bomb out");
 }
 
 void MoveLauncher(int desiredPosition){
@@ -291,10 +317,10 @@ int GetEncoderBoolean(){
 }
 
 void Reload(){
-  launcherServo.write(0); //FIXME - check which angle fits under launcher best
+  launcherServo.write(0); //TODO - check which angle fits under launcher best
   MoveLauncher(40); //37 is reloading position
   reloaderServo.write(reloaderServoAngle2);
-  Serial.println("Drop ball"); //Following lines are from TestReloader - FIXME: ensure they are optimized
+  Serial.println("Drop ball"); //Following lines are from TestReloader - TODO: ensure they are optimized
   delay(1000);
   reloaderServo.write(reloaderServoAngle1);
   Serial.println("Reload");
