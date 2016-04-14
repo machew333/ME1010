@@ -3,14 +3,11 @@ Author Name: Kevin Moffatt and Matt Wilson
 Date: 4/5/16
 Sketch Name: Demo2
 Sketch Description:  
-
 Button Usage: Up/Down    -  
               Left/Right -  
               Select     -  
-
 Pin Usage:    Pin type/number     Hardware 
               ----------------    ----------------  
-
 ******************************************************************/
  
 /****************************
@@ -24,7 +21,6 @@ Pin Usage:    Pin type/number     Hardware
  ***********************/
 char tmp_string[100]; //for storing print string chars
 // *** Declare & Initialize Pins ***
-const int buttons = A7;
 int motorDirPin = 4;
 int motorPowPin = 5;
 int irPin = A5;
@@ -40,7 +36,7 @@ const int reloaderServoPin = 10;
 Servo launcherServo;
 Servo reloaderServo;
 // *** Declare & Initialize Program Variables ***
-int buttonReading = 0;
+
 int motorPower = 255;
 boolean motorOn = 0;
 boolean motorLeft = 1;
@@ -77,7 +73,7 @@ void setup(void){
   // PUT YOUR SETUP CODE HERE, TO RUN ONCE:
 
   // *** Configure Digital Pins & Attach Servos ***
-pinMode(buttons,INPUT);
+
 pinMode(motorDirPin,OUTPUT);
 pinMode(motorPowPin,OUTPUT);
 pinMode(irPin,INPUT);  
@@ -158,35 +154,6 @@ if(target < 5){ //target is global variable to keep track of which target
 /****************************
  ** User-Defined Functions **
  ****************************/
-int ReadButton() {
-  int buttonReading = analogRead(buttons);
-
-  //UP
-  if (buttonReading < 5) {
-  return 1;
-} 
-//LEFT
-else if ((buttonReading > 134) && (buttonReading < 154)) {
-  return 2;
-} 
-//DOWN
-else if ((buttonReading > 323) && (buttonReading < 343)) {
-  return 3;
-} 
-//RIGHT
-else if ((buttonReading > 498) && (buttonReading < 518)) {
-  return 4;
-} 
-//SELECT
-else if ((buttonReading > 735) && (buttonReading < 755)) {
-  return 5;
-} 
-//NOTHING
-else if ((buttonReading > 1013)) {
-  return 0;
-}
-
-}
 
 void TurnMotorOn(){
   digitalWrite(motorDirPin,motorLeft);
@@ -229,7 +196,6 @@ void CountStripes(){
 }
 
 void FireSolenoid(){
-  int buttonReading = analogRead(buttons);
   digitalWrite(solenoidDirPin,1);
   analogWrite(solenoidPowPin,solenoidPower);
   Serial.println("Firing!");
@@ -253,6 +219,12 @@ void MoveLauncher(int desiredPosition){
     switchValRight = digitalRead(rightSwitchPin);
   }
   BrakeMotor();
+
+  delay(500);
+  switchValLeft = digitalRead(leftSwitchPin); 
+  switchValRight = digitalRead(rightSwitchPin); 
+
+  
   if (switchValLeft == 1){
     counts = 0;
     Serial.println("Launcher at home position. Counts reset to 0");
@@ -289,9 +261,6 @@ void KillSwitch() {
   analogWrite(motorPowPin,0);
   analogWrite(solenoidPowPin,0);
 }
-
-
-
 
 
 

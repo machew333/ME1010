@@ -21,7 +21,6 @@ Pin Usage:    Pin type/number     Hardware
  ** Global Variables ***
  ***********************/
 // *** Declare & Initialize Pins ***
-const int buttons = A7;
 int motorDirPin = 4;
 int motorPowPin = 5;
 int irPin = A5;
@@ -44,6 +43,7 @@ int irSensorReading = 0;
 boolean currentEncoderBoolean = 0;
 boolean dispBool = 0;
 boolean lastEncoderBoolean;
+boolean previousEncoderBoolean;
 unsigned long lastTime;
 unsigned long currentTime = 0;
 int counts = 0;
@@ -77,7 +77,6 @@ void setup(void){
   // PUT YOUR SETUP CODE HERE, TO RUN ONCE:
 
   // *** Configure Digital Pins & Attach Servos ***
-pinMode(buttons,INPUT);
 pinMode(motorDirPin,OUTPUT);
 pinMode(motorPowPin,OUTPUT);
 pinMode(irPin,INPUT);  
@@ -133,9 +132,6 @@ int lenTargets = 6;
     Serial.println(targetMessage);
   }
 
-//Tell Matlab to end serial stuff
-Serial.println("");
-
 
 
 int switchValLeft = digitalRead(leftSwitchPin); 
@@ -186,6 +182,10 @@ if(target < 5){ //target is global variable to keep track of which target
   digitalWrite(pinIRLED,1);
   delay(1000);
   digitalWrite(pinIRLED,0); //Turns IRLED on to stop timer
+
+  //Tell Matlab to end serial stuff
+Serial.println("");
+
   
   while(true){
     continue; //do nothing, waits in endless loops
@@ -197,35 +197,8 @@ if(target < 5){ //target is global variable to keep track of which target
 /****************************
  ** User-Defined Functions **
  ****************************/
-int ReadButton() {
-  int buttonReading = analogRead(buttons);
 
-  //UP
-  if (buttonReading < 5) {
-  return 1;
-} 
-//LEFT
-else if ((buttonReading > 134) && (buttonReading < 154)) {
-  return 2;
-} 
-//DOWN
-else if ((buttonReading > 323) && (buttonReading < 343)) {
-  return 3;
-} 
-//RIGHT
-else if ((buttonReading > 498) && (buttonReading < 518)) {
-  return 4;
-} 
-//SELECT
-else if ((buttonReading > 735) && (buttonReading < 755)) {
-  return 5;
-} 
-//NOTHING
-else if ((buttonReading > 1013)) {
-  return 0;
-}
 
-}
 
 void TurnMotorOn(){
   digitalWrite(motorDirPin,motorLeft);
@@ -246,11 +219,13 @@ void BrakeMotor(){
 }
 
 void CountStripes(){
+  delay(10);
+  previousEncoderBoolean = currentEncoderBoolean;
   currentEncoderBoolean = GetEncoderBoolean();
   currentTime = millis();
   double deltaTime = currentTime - lastTime;
   
-  if (deltaTime > 10 && currentEncoderBoolean != lastEncoderBoolean) {
+  if (deltaTime > 10 && currentEncoderBoolean != lastEncoderBoolean  && currentEncoderBoolean == previousEncoderBoolean) {
     if (motorLeft == 1){
       counts--;
       Serial.print("Counts = ");
@@ -268,7 +243,6 @@ void CountStripes(){
 }
 
 void FireSolenoid(){
-  int buttonReading = analogRead(buttons);
   digitalWrite(solenoidDirPin,1);
   analogWrite(solenoidPowPin,solenoidPower);
   Serial.println("Firing!");
@@ -292,6 +266,10 @@ void MoveLauncher(int desiredPosition){
     switchValRight = digitalRead(rightSwitchPin);
   }
   BrakeMotor();
+  delay(250); //so switch doesn't get read high on accident
+  switchValLeft = digitalRead(leftSwitchPin); 
+  switchValRight = digitalRead(rightSwitchPin);
+  
   if (switchValLeft == 1){
     counts = 0;
     Serial.println("Launcher at home position. Counts reset to 0");
