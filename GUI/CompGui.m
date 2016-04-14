@@ -22,7 +22,7 @@ function varargout = CompGui(varargin)
 
 % Edit the above text to modify the response to help CompGui
 
-% Last Modified by GUIDE v2.5 14-Apr-2016 12:52:23
+% Last Modified by GUIDE v2.5 14-Apr-2016 13:38:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -81,7 +81,18 @@ function PlateNumberEnter_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of PlateNumberEnter as text
 %        str2double(get(hObject,'String')) returns contents of PlateNumberEnter as a double
-
+imageName = get(hObject,'String');
+targImage = imread(imageName);
+axis image;
+image(targImage);
+choice = round(ginput(1));
+RGB = impixel(targImage,choice(1),choice(2)); %RGB values of pixel
+[ targetRows, targetCols, blackoutIMG ] = FindAllTargetCentroids(targImage,RGB);
+axis image;
+image(blackoutIMG);
+hold on
+plot(targetCols,targetRows,'wx');
+hold off
 
 % --- Executes during object creation, after setting all properties.
 function PlateNumberEnter_CreateFcn(hObject, eventdata, handles)
