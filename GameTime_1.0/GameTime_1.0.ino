@@ -105,6 +105,25 @@ Serial.begin(9600);
 //Start communication with Matlab script
 Serial.write(' ');
 
+while (!Serial.available()) {
+  //do nothing
+}
+Serial.read(); //clear serial buffer
+
+int switchValLeft = digitalRead(leftSwitchPin); 
+int switchValRight = digitalRead(rightSwitchPin);
+
+
+
+
+if (switchValLeft == 1){
+    counts = 0;
+    Serial.println("Launcher at home position. Counts reset to 0");
+  } else {
+    Serial.println("Launcher will be sent to home position");
+    MoveLauncher(-100); //Sends launcher to home position (0)
+  }
+
 
 byte matlabData[3];
 String reply = "";
@@ -134,37 +153,22 @@ int lenTargets = 6;
     Serial.println(reply);      
   }
 
-//calculate servo angles and store in writeToServo[]
-TargetServoAngles(xTarget);
 
+
+
+Serial.println("Timer is being started. It's game time.");
+    digitalWrite(pinIRLED,1);
+    delay(1000);
+    digitalWrite(pinIRLED,0); //Turns IRLED on to start timer
+
+//calculate servo angles and store in writeToServo[]
+TargetServoAngles(xTarget); 
 
 String targetMessage;
   for (int i = 0; i< 6; i++ ) {
     targetMessage = "Target distance = " + String(xTarget[i]) + " m --> Servo angle = " + String(writeToServo[i]);
     Serial.println(targetMessage);
   }
-
-
-
-int switchValLeft = digitalRead(leftSwitchPin); 
-int switchValRight = digitalRead(rightSwitchPin);
-
-
-Serial.read(); //clear serial queue
- 
-if (switchValLeft == 1){
-    counts = 0;
-    Serial.println("Launcher at home position. Counts reset to 0");
-  } else {
-    Serial.println("Launcher will be sent to home position");
-    MoveLauncher(-100); //Sends launcher to home position (0)
-    Serial.println("Timer is being started. It's game time.");
-    digitalWrite(pinIRLED,1);
-    delay(1000);
-    digitalWrite(pinIRLED,0); //Turns IRLED on to start timer
-  }
-
- 
   
 
 }// end setup() function
@@ -297,13 +301,35 @@ void MoveLauncher(int desiredPosition){
   switchValRight = digitalRead(rightSwitchPin);
   
   if (switchValLeft == 1){
-    counts = 0;
+    delay(250);
+    int verifyVal = digitalRead(leftSwitchPin);
+    if (verifyVal && switchValLeft) {
+      counts = 0;
     Serial.println("Launcher at home position. Counts reset to 0");
+    }
+    else {
+      Serial.println("Bad left switch reading");
+      //try to pick up where you left off
+      MoveLauncher(desiredPosition);
+    }
+    
   }
+
+  
   if (switchValRight == 1){
-    counts = 37; //37 is verified to be max counts
-    Serial.println("Launcher is at reloading position. Counts set to 37");
-  }
+    delay(250);
+    int verifyVal = digitalRead(rightSwitchPin);
+    if (verifyVal && switchValRight) {
+      counts = 0;
+    Serial.println("Launcher at reload position. Counts set to 37");
+    }
+    else {
+      Serial.println("Bad right switch reading");
+      //try to pick up where you left off
+      MoveLauncher(desiredPosition);
+    }
+}
+
 }
 
 int GetEncoderBoolean(){

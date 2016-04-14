@@ -27,6 +27,7 @@ fprintf('\nWaiting for Romeo...\n')
 while (~ Serial.BytesAvailable)
     continue;
 end
+fwrite(Serial,'x');
 fprintf('found him\n');
 
 
