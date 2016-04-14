@@ -76,7 +76,7 @@ end
 fclose(Serial); %closes Serial port
 delete(Serial); %removes Serial from memory
 clear Serial;
-close
+close all
 
 fprintf('\nDone\n');
 
