@@ -1,8 +1,8 @@
 /****************************************************************
 Author Name: Kevin Moffatt and Matt Wilson
 Date: 4/5/16
-Sketch Name: Demo2
-Sketch Description:  
+Sketch Name: GameTime_1.0
+Sketch Description: Competition code
 
 Button Usage: Up/Down    -  
               Left/Right -  
