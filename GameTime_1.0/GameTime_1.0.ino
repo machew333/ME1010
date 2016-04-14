@@ -109,7 +109,7 @@ Serial.write(' ');
 byte matlabData[3];
 String reply = "";
 int lenTargets = 6;
-
+//Read in data from MATLAB
   for (int i = 0; i<lenTargets; i++) {
 
     while (!Serial.available()) {
