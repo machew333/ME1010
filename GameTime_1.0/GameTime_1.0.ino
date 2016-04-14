@@ -317,7 +317,7 @@ int GetEncoderBoolean(){
 }
 
 void Reload(){
-  launcherServo.write(30); //TODO - check which angle fits under launcher best
+  launcherServo.write(30); //good reload angle
   MoveLauncher(40); //37 is reloading position
   reloaderServo.write(reloaderServoAngle2);
   Serial.println("Drop ball"); //Following lines are from TestReloader - TODO: ensure they are optimized

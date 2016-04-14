@@ -30,7 +30,7 @@ end
 fprintf('found him\n');
 
 
-targetImage = imread('blue_B2.bmp'); %Reads target image
+targetImage = imread('blue_A2.bmp'); %Reads target image
 
 targetRGB = ColorPicker(targetImage);
 [centroidRows, centroidCols, blackoutIMG] = FindAllTargetCentroids(targetImage,targetRGB); %Finds centroids of targets
@@ -76,6 +76,7 @@ end
 fclose(Serial); %closes Serial port
 delete(Serial); %removes Serial from memory
 clear Serial;
+close
 
 fprintf('\nDone\n');
 
