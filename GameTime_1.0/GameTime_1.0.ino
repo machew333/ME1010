@@ -212,9 +212,21 @@ else {
   delay(1000);
   digitalWrite(pinIRLED,0); //Turn irled on. Stop timer. Ride off into the sunset.
 
-  
+
+
+//give the crowd a nod
+launcherServo.write(90);
+delay(600);
+launcherServo.write(0);
+delay(2000);
+
+
+
+
 //Tell Matlab to end serial stuff
 Serial.println("");
+
+
 
   
   while(true){
@@ -296,40 +308,19 @@ void MoveLauncher(int desiredPosition){
     switchValRight = digitalRead(rightSwitchPin);
   }
   BrakeMotor();
-  delay(250); //so switch doesn't get read high on accident
+  delay(600); //so switch doesn't get read high on accident
   switchValLeft = digitalRead(leftSwitchPin); 
   switchValRight = digitalRead(rightSwitchPin);
   
   if (switchValLeft == 1){
-    delay(250);
-    int verifyVal = digitalRead(leftSwitchPin);
-    if (verifyVal && switchValLeft) {
-      counts = 0;
-    Serial.println("Launcher at home position. Counts reset to 0");
-    }
-    else {
-      Serial.println("Bad left switch reading");
-      //try to pick up where you left off
-      MoveLauncher(desiredPosition);
-    }
-    
-  }
-
   
+    counts = 0;
+    Serial.println("Launcher at home position. Counts reset to 0");
+  }
   if (switchValRight == 1){
-    delay(250);
-    int verifyVal = digitalRead(rightSwitchPin);
-    if (verifyVal && switchValRight) {
-      counts = 0;
-    Serial.println("Launcher at reload position. Counts set to 37");
-    }
-    else {
-      Serial.println("Bad right switch reading");
-      //try to pick up where you left off
-      MoveLauncher(desiredPosition);
-    }
-}
-
+    counts = 37; //37 is verified to be max counts
+    Serial.println("Launcher is at reloading position. Counts set to 37");
+  }
 }
 
 int GetEncoderBoolean(){
