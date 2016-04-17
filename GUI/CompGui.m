@@ -22,7 +22,7 @@ function varargout = CompGui(varargin)
 
 % Edit the above text to modify the response to help CompGui
 
-% Last Modified by GUIDE v2.5 14-Apr-2016 13:38:22
+% Last Modified by GUIDE v2.5 15-Apr-2016 20:32:04
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -51,13 +51,18 @@ function CompGui_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to CompGui (see VARARGIN)
-
+axes(handles.Porkins); %sets current axes to Porkins
+porkinsIm = imread('Porkins.jpg');
+axis image;
+image(porkinsIm);
+axes(handles.RebelSymbol); %sets current axes to RebelSymbol
+RebelSymbolIm = imread('RebelSymbol2.jpg');
+axis image;
+image(RebelSymbolIm);
 % Choose default command line output for CompGui
 handles.output = hObject;
 
 % Update handles structure
-guidata(hObject, handles);
-
 % UIWAIT makes CompGui wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -68,11 +73,7 @@ function varargout = CompGui_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Get default command line output from handles structure
-varargout{1} = handles.output;
-
-
 
 function PlateNumberEnter_Callback(hObject, eventdata, handles)
 % hObject    handle to PlateNumberEnter (see GCBO)
@@ -81,18 +82,8 @@ function PlateNumberEnter_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of PlateNumberEnter as text
 %        str2double(get(hObject,'String')) returns contents of PlateNumberEnter as a double
-imageName = get(hObject,'String');
-targImage = imread(imageName);
-axis image;
-image(targImage);
-choice = round(ginput(1));
-RGB = impixel(targImage,choice(1),choice(2)); %RGB values of pixel
-[ targetRows, targetCols, blackoutIMG ] = FindAllTargetCentroids(targImage,RGB);
-axis image;
-image(blackoutIMG);
-hold on
-plot(targetCols,targetRows,'wx');
-hold off
+
+
 
 % --- Executes during object creation, after setting all properties.
 function PlateNumberEnter_CreateFcn(hObject, eventdata, handles)
@@ -112,3 +103,39 @@ function FindTargButton_Callback(hObject, eventdata, handles)
 % hObject    handle to FindTargButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+axes(handles.TargetImage); %sets current axes to TargetImage
+imageName = get(handles.PlateNumberEnter,'String');
+targImage = imread(imageName);
+axis image;
+image(targImage);
+choice = round(ginput(1));
+RGB = impixel(targImage,choice(1),choice(2)); %RGB values of pixel
+[ targetRows, targetCols, blackoutIMG ] = FindAllTargetCentroids(targImage,RGB);
+axis image;
+image(blackoutIMG);
+hold on
+plot(targetCols,targetRows,'wx');
+hold off
+
+
+% --- Executes on selection change in TargetBox.
+function TargetBox_Callback(hObject, eventdata, handles)
+% hObject    handle to TargetBox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns TargetBox contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from TargetBox
+
+
+% --- Executes during object creation, after setting all properties.
+function TargetBox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to TargetBox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
