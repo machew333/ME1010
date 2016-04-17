@@ -51,6 +51,12 @@ function CompGui_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to CompGui (see VARARGIN)
+% Choose default command line output for CompGui
+axes(handles.TargetingComputer); %sets current axes to TargetingComputer
+TargetingCompIm = imread('XwingTargetingComp.png');
+axis image;
+image(TargetingCompIm);
+handles.output = hObject;
 axes(handles.Porkins); %sets current axes to Porkins
 porkinsIm = imread('Porkins.jpg');
 axis image;
@@ -112,10 +118,19 @@ choice = round(ginput(1));
 RGB = impixel(targImage,choice(1),choice(2)); %RGB values of pixel
 [ targetRows, targetCols, blackoutIMG ] = FindAllTargetCentroids(targImage,RGB);
 axis image;
-image(blackoutIMG);
+image(blackoutIMG); %Displays blackout image
 hold on
 plot(targetCols,targetRows,'wx');
 hold off
+stringOne = sprintf('Targets aquired. Row coordinates are:\n');
+stringTwo = sprintf('\nColumn coordinates are:\n');
+stringTargetRows = mat2str(targetRows);
+stringTargetCols = mat2str(targetCols);
+targString = [stringOne, stringTargetRows, stringTwo, stringTargetCols]; 
+set(handles.TargetBox,'String',targString); %Sends targets to listbox
+GameTime_3(targetRows,targetCols); %Runs competition code with the centroids found
+
+
 
 
 % --- Executes on selection change in TargetBox.
