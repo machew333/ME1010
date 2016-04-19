@@ -128,7 +128,7 @@ stringTargetRows = mat2str(targetRows);
 stringTargetCols = mat2str(targetCols);
 targString = [stringOne, stringTargetRows, stringTwo, stringTargetCols]; 
 set(handles.TargetBox,'String',targString); %Sends targets to listbox
-portName = get(handles.CommPort,'String');
+
 GameTime_3(targetRows,targetCols,portName); %Runs competition code with the centroids found
 
 
@@ -162,8 +162,6 @@ function StartCommButton_Callback(hObject, eventdata, handles)
 % hObject    handle to StartCommButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-portName = get(handles.CommPort,'String'); %Use this to check if serial is avalible somehow?
-%Write code to check comm port somehow
 
 
 

@@ -1,4 +1,4 @@
-function GameTime_3( centroidRows, centroidCols )
+function GameTime_3( centroidRows, centroidCols, macPort )
 %GameTime_3 runs competition code through GUI
 % Script for Serial communication to Arduino(Romeo) board
 
@@ -11,11 +11,11 @@ if (length(instrfind) > 0)
     delete(instrfind);
 end
 
-%Initialize port
-windowsPort = 'COM23';
-macPortR = '/dev/cu.usbmodem1411';
-macPortL = '/dev/cu.usbmodem1421';
-macPort = macPortL;
+% %Initialize port
+% windowsPort = 'COM23';
+% macPortR = '/dev/cu.usbmodem1411';
+% macPortL = '/dev/cu.usbmodem1421';
+% macPort = macPortL;
 
 %speed of serial transmission. must match Arduino side
 baudRate = 9600;
