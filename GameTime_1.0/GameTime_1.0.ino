@@ -24,7 +24,7 @@ int motorDirPin = 4;
 int motorPowPin = 5;
 int irPin = A5;
 const int leftSwitchPin = 11;
-const int rightSwitchPin = 12;
+const int rightSwitchPin = 2;
 const int servoPin = 9;
 const int solenoidDirPin = 7;
 const int solenoidPowPin = 6;
@@ -50,8 +50,6 @@ unsigned long currentTime = 0;
 int counts = 0;
 int leftSwitchReading = 0;
 int rightSwitchReading = 0;
-int solenoidActivationTime = 500;
-int solenoidPower = 255;
 int launcherServoAngle = 90;
 int servoSmallIncrement = 1;
 int servoLargeIncrement = 5;
@@ -59,8 +57,8 @@ int shotDelay = 5000;
 int desiredPosition = 0;
 int ledOnTime = 1000;
 int ledOffTime = 1000;
-int reloaderServoAngle1 = 30; //X
-int reloaderServoAngle2 = 0; //Y
+int reloaderAngleRest = 30; //X
+int reloaderAngleDrop = 0; //Y
 
 
 //Targets
@@ -98,7 +96,7 @@ launcherServo.write(0);
 reloaderServo.write(0); 
   // *** Move Hardware to Desired Initial Positions ***
 launcherServo.write(launcherServoAngle);
-reloaderServo.write(reloaderServoAngle1);
+reloaderServo.write(reloaderAngleRest);
 
   // *** Initialize Serial Communication ***
 Serial.begin(9600);
@@ -112,8 +110,6 @@ Serial.read(); //clear serial buffer
 
 int switchValLeft = digitalRead(leftSwitchPin); 
 int switchValRight = digitalRead(rightSwitchPin);
-
-
 
 
 if (switchValLeft == 1){
@@ -131,8 +127,9 @@ int lenTargets = 6;
 //Read in data from MATLAB
   for (int i = 0; i<lenTargets; i++) {
 
+    //wait for serial message
     while (!Serial.available()) {
-      continue; //wait for serial message
+      continue; 
     }
     
     Serial.readBytes(matlabData,3); //encoder, target high bit, target low bit
@@ -189,9 +186,9 @@ if (target < 5){
   MoveLauncher(driveTo[target]); //move launcher to target position
   launcherServo.write(writeToServo[target]); //move servo to launch angle
   
-  delay(1000);
+  delay(500);
   FireSolenoid();
-  delay(1000);
+  delay(200);
   
   Reload();
   target++;
@@ -201,11 +198,10 @@ else {
   MoveLauncher(driveTo[target]); //move launcher to target position
   launcherServo.write(writeToServo[target]); //move servo to launch angle
   
-  delay(1000);
+  delay(500);
   FireSolenoid();
-  
   Serial.println("Waiting to move launcher");
-  delay(1000);
+  delay(200);
   
   MoveLauncher(-2); //move to home position
   digitalWrite(pinIRLED,1);
@@ -284,6 +280,8 @@ void CountStripes(){
   }
 }
 
+int solenoidActivationTime = 500;
+int solenoidPower = 255;
 void FireSolenoid(){
   digitalWrite(solenoidDirPin,1);
   analogWrite(solenoidPowPin,solenoidPower);
@@ -308,7 +306,7 @@ void MoveLauncher(int desiredPosition){
     switchValRight = digitalRead(rightSwitchPin);
   }
   BrakeMotor();
-  delay(600); //so switch doesn't get read high on accident
+  delay(100); //so switch doesn't get read high on accident
   switchValLeft = digitalRead(leftSwitchPin); 
   switchValRight = digitalRead(rightSwitchPin);
   
@@ -336,12 +334,12 @@ int GetEncoderBoolean(){
 void Reload(){
   launcherServo.write(30); //good reload angle
   MoveLauncher(40); //37 is reloading position
-  reloaderServo.write(reloaderServoAngle2);
+  reloaderServo.write(reloaderAngleDrop);
   Serial.println("Drop ball"); //Following lines are from TestReloader - TODO: ensure they are optimized
-  delay(1000);
-  reloaderServo.write(reloaderServoAngle1);
+  delay(500);
+  reloaderServo.write(reloaderAngleRest);
   Serial.println("Reload");
-  delay(1000);
+  delay(250);
 }
 
 void KillSwitch() {
