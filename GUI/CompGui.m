@@ -22,7 +22,7 @@ function varargout = CompGui(varargin)
 
 % Edit the above text to modify the response to help CompGui
 
-% Last Modified by GUIDE v2.5 20-Apr-2016 01:40:29
+% Last Modified by GUIDE v2.5 20-Apr-2016 12:29:33
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -131,7 +131,9 @@ if (isGoodImage)
     stringTargetRows = mat2str(targetRows);
     stringTargetCols = mat2str(targetCols);
     targString = [stringOne, stringTargetRows, stringTwo, stringTargetCols]; 
+    set(handles.TargetBox,'Visible','on');
     set(handles.TargetBox,'String',targString); %Sends targets to listbox
+    pause(1);
     portName = get(handles.CommPort,'String');
     GameTime_3(targetRows,targetCols,portName); %Runs competition code with the centroids found
 else
@@ -274,3 +276,19 @@ clearMessage = sprintf('Serial cleared.\n  Try again.');
 set(handles.serial_state_text,'String', clearMessage);
 %hide button
 set(hObject,'Visible','off');
+
+
+% --- Executes on button press in Port_Button.
+function Port_Button_Callback(hObject, eventdata, handles)
+% hObject    handle to Port_Button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+fprintf('PORT DOWN\n');
+portName = get(handles.CommPort,'String');
+
+if (strfind(portName, 'cu'))
+    portName = strrep(portName, 'cu','tty')
+elseif (strfind(portName,'tty'))
+    portName = strrep(portName,'tty','cu')
+end
+set(handles.CommPort,'String',portName);
