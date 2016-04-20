@@ -3,7 +3,7 @@ function [ isGoodImage ] = CheckImage( imageName )
 %   Detailed explanation goes here
 
 try 
-    imread(imageName)
+    imread(imageName);
     isGoodImage = 1;
 catch
     isGoodImage = 0;

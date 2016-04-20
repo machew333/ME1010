@@ -138,7 +138,8 @@ else
     fprintf('Bad image file.\n');
     %display error image
     axis image;
-    image;
+    errorImage = imread('error_image.png');
+    image(errorImage);
 end
    
 
@@ -173,6 +174,7 @@ function StartCommButton_Callback(hObject, eventdata, handles)
 portName = get(handles.CommPort,'String');
 
 %Backup port when my mac is being weird: /dev/tty.usbmodem1411
+%/dev/tty.usbmodem1421
 
 %test if the serial port is working
 try
