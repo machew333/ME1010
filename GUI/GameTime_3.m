@@ -2,8 +2,11 @@ function GameTime_3( centroidRows, centroidCols, macPort )
 %GameTime_3 runs competition code through GUI
 % Script for Serial communication to Arduino(Romeo) board
 
+fprintf('It''s game time\n');
+
+
 %try and catch to make sure serial isn't left on
-try 
+% try 
 
 %Ensure there are no previous communications
 if (length(instrfind) > 0)
@@ -74,11 +77,11 @@ close all
 
 fprintf('\nDone\n');
 
-catch 
-    fprintf('Error occurred');
-    %in case thing quits, close serial communications
-    fclose(Serial);
-end
+% catch 
+%     fprintf('Error occurred in Game Time');
+%     %in case thing quits, close serial communications
+%     fclose(Serial);
+% end
 
 end
 
