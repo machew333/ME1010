@@ -186,10 +186,9 @@ if (target < 5){
   MoveLauncher(driveTo[target]); //move launcher to target position
   launcherServo.write(writeToServo[target]); //move servo to launch angle
   
-  delay(500);
+  delay(500); //TODO: try tweaking these as low as possible
   FireSolenoid();
-  delay(200);
-  
+  delay(1); //for safety
   Reload();
   target++;
 } 
@@ -198,10 +197,10 @@ else {
   MoveLauncher(driveTo[target]); //move launcher to target position
   launcherServo.write(writeToServo[target]); //move servo to launch angle
   
-  delay(500);
+  delay(500); //TODO: try tweaking these as low as possible
   FireSolenoid();
   Serial.println("Waiting to move launcher");
-  delay(200);
+  delay(1); //for safety 
   
   MoveLauncher(-2); //move to home position
   digitalWrite(pinIRLED,1);
@@ -214,7 +213,7 @@ else {
 launcherServo.write(90);
 delay(600);
 launcherServo.write(0);
-delay(2000);
+delay(1500);
 
 
 
@@ -285,10 +284,8 @@ int solenoidPower = 255;
 void FireSolenoid(){
   digitalWrite(solenoidDirPin,1);
   analogWrite(solenoidPowPin,solenoidPower);
-  Serial.println("Firing!");
   delay(solenoidActivationTime);
   analogWrite(solenoidPowPin,0);
-  Serial.println("Bomb out");
 }
 
 void MoveLauncher(int desiredPosition){
@@ -306,7 +303,7 @@ void MoveLauncher(int desiredPosition){
     switchValRight = digitalRead(rightSwitchPin);
   }
   BrakeMotor();
-  delay(100); //so switch doesn't get read high on accident
+  delay(5); //so switch doesn't get read high on accident
   switchValLeft = digitalRead(leftSwitchPin); 
   switchValRight = digitalRead(rightSwitchPin);
   
@@ -336,10 +333,10 @@ void Reload(){
   MoveLauncher(40); //37 is reloading position
   reloaderServo.write(reloaderAngleDrop);
   Serial.println("Drop ball"); //Following lines are from TestReloader - TODO: ensure they are optimized
-  delay(500);
+  delay(300);
   reloaderServo.write(reloaderAngleRest);
   Serial.println("Reload");
-  delay(250);
+  delay(5);
 }
 
 void KillSwitch() {
