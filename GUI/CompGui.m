@@ -52,6 +52,8 @@ function CompGui_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to CompGui (see VARARGIN)
 % Choose default command line output for CompGui
+
+% Following commands add aesthetics to initial GUI
 axes(handles.TargetingComputer); %sets current axes to TargetingComputer
 TargetingCompIm = imread('XwingTargetingComp.png');
 axis image;
@@ -110,12 +112,12 @@ function FindTargButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 axes(handles.TargetImage); %sets current axes to TargetImage
-imageName = get(handles.PlateNumberEnter,'String');
+imageName = get(handles.PlateNumberEnter,'String'); %when the button is pushed it gets the name of the image from the textbox
 
-isGoodImage =CheckImage(imageName);
+isGoodImage =CheckImage(imageName); %Function CheckImage checks to see if image is valid
 
 if (isGoodImage)    
-    targImage = imread(imageName);
+    targImage = imread(imageName); 
     axis image;
     image(targImage);
     choice = round(ginput(1));
@@ -132,10 +134,10 @@ if (isGoodImage)
     stringTargetCols = mat2str(targetCols);
     targString = [stringOne, stringTargetRows, stringTwo, stringTargetCols]; 
     set(handles.TargetBox,'Visible','on');
-    set(handles.TargetBox,'String',targString); %Sends targets to listbox
+    set(handles.TargetBox,'String',targString); %Sends target coordinates to listbox
     pause(1);
-    portName = get(handles.CommPort,'String');
-    GameTime_3(targetRows,targetCols,portName); %Runs competition code with the centroids found
+    portName = get(handles.CommPort,'String'); %Gets the portname from the correct textbox
+    GameTime_3(targetRows,targetCols,portName); %Runs competition code with the centroids found and given portName
 else
     fprintf('Bad image file.\n');
     %display error image
@@ -174,9 +176,6 @@ function StartCommButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 portName = get(handles.CommPort,'String');
-
-%Backup port when my mac is being weird: /dev/tty.usbmodem1411
-%/dev/tty.usbmodem1421
 
 %test if the serial port is working
 try
@@ -248,7 +247,7 @@ function Left_Button_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 leftPort = sprintf('/dev/cu.usbmodem1421');
-set(handles.CommPort,'String', leftPort);
+set(handles.CommPort,'String', leftPort); %Sets portName corresponding to right port on mac
 
 % --- Executes on button press in Right_Button.
 function Right_Button_Callback(hObject, eventdata, handles)
@@ -256,7 +255,7 @@ function Right_Button_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 rightPort = sprintf('/dev/cu.usbmodem1411');
-set(handles.CommPort,'String', rightPort);
+set(handles.CommPort,'String', rightPort); %Sets portName corresponding to right port on mac
 
 
 % --- Executes on button press in Clear_Serial.
@@ -285,7 +284,7 @@ function Port_Button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 fprintf('PORT DOWN\n');
 portName = get(handles.CommPort,'String');
-
+%Switches port from /dev/cu to /dev/tty or vice versa if port isn't working
 if (strfind(portName, 'cu'))
     portName = strrep(portName, 'cu','tty')
 elseif (strfind(portName,'tty'))
