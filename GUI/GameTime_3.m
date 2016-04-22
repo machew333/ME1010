@@ -39,7 +39,7 @@ centroidRows = floor(centroidRows); %Makes centroid values integers
 centroidCols = floor(centroidCols);
 
 
-encoderPos = (centroidRows/10)-6;
+encoderPos = (centroidRows/10)-4;
 xTarget_mm = centroidCols + 650;
 xTarget_HB = floor(xTarget_mm/256);
 xTarget_LB = xTarget_mm - (256 * xTarget_HB);

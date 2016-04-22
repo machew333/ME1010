@@ -1,6 +1,6 @@
 /****************************************************************
 Author Name: Kevin Moffatt and Matt Wilson
-Date: 4/5/16
+Date: 4/5/16 
 Sketch Name: GameTime_1.0
 Sketch Description: Competition code
 
@@ -152,7 +152,7 @@ int lenTargets = 6;
 
 
 
-
+//turn on led to start timer
 Serial.println("Timer is being started. It's game time.");
     digitalWrite(pinIRLED,1);
     delay(1000);
@@ -208,20 +208,8 @@ else {
   digitalWrite(pinIRLED,0); //Turn irled on. Stop timer. Ride off into the sunset.
 
 
-
-//give the crowd a nod
-launcherServo.write(90);
-delay(600);
-launcherServo.write(0);
-delay(1500);
-
-
-
-
 //Tell Matlab to end serial stuff
 Serial.println("");
-
-
 
   
   while(true){
